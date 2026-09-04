@@ -181,6 +181,7 @@
     line-height:1.6;color:var(--text-dim);white-space:pre;
   }
   pre.code .tok{color:var(--ajax);font-weight:600;}
+  pre.code .tok.warm{color:var(--htmx);}
   .caption{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);max-width:62ch;}
 
   /* Card grid */
@@ -190,6 +191,7 @@
     padding:clamp(12px,1.8cqw,18px);display:flex;flex-direction:column;gap:6px;
   }
   .pain-card .k{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:clamp(11px,1.6cqw,15px);letter-spacing:.02em;}
+  .pain-card .k.warm{color:var(--htmx);}
   .pain-card .v{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);line-height:1.4;}
 
   .story-quote{
@@ -205,7 +207,7 @@
     font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);
   }
   .progress-track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--ajax);width:6.66%;transition:width .3s ease;}
+  .progress-fill{height:100%;background:var(--ajax);width:4.5%;transition:width .3s ease;}
   .navbtn{
     background:none;border:1px solid var(--rule);color:var(--text-dim);
     border-radius:6px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
@@ -446,6 +448,101 @@ flowchart LR
     </footer>
   </section>
 
+  <!-- 16: HTMX REVEAL -->
+  <section class="slide" data-notes="That's not a hypothetical. It's called HTMX — and it's built on an idea that's actually older than Ajax: hypermedia.">
+    <div class="eyebrow warm">Section 03 &middot; The Reveal</div>
+    <div class="slide-body reveal-lines">
+      <h2 class="display lg">That's not a hypothetical.</h2>
+      <h2 class="display lg hit">It's called HTMX.</h2>
+      <h2 class="display lg hit">Built on an idea older than Ajax: hypermedia.</h2>
+    </div>
+  </section>
+
+  <!-- 17: THE HYPERMEDIA IDEA -->
+  <section class="slide" data-notes="You already know hypermedia. Every &lt;a href&gt; and every &lt;form&gt; you've ever written is a hypermedia control — an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.">
+    <div class="eyebrow warm">The idea</div>
+    <div class="slide-body" style="justify-content:center;">
+      <p class="story-quote">You already know hypermedia. Every <code class="mono">&lt;a href&gt;</code> and every <code class="mono">&lt;form&gt;</code> you've ever written is a hypermedia control — an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.</p>
+    </div>
+  </section>
+
+  <!-- 18: CORE SYNTAX CODE -->
+  <section class="slide" data-notes="One element. Four attributes. The behavior lives right there in the tag — no PHP file to go find, no wrapper ID to keep in sync across two files.">
+    <div class="eyebrow warm">In code</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">&lt;select <span class="tok warm">hx-get</span>="/filter-results"
+        <span class="tok warm">hx-trigger</span>="change"
+        <span class="tok warm">hx-target</span>="#results"
+        <span class="tok warm">hx-swap</span>="innerHTML"&gt;
+  ...
+&lt;/select&gt;
+
+&lt;div id="results"&gt;
+  &lt;!-- server returns just this fragment --&gt;
+&lt;/div&gt;</pre>
+      </div>
+      <p class="caption">One element. Four attributes. The behavior lives right there in the tag — no PHP file to go find, no wrapper ID to keep in sync across two files.</p>
+    </div>
+  </section>
+
+  <!-- 19: HTMX SEQUENCE DIAGRAM -->
+  <section class="slide" data-notes="Compare that to the version you saw ten minutes ago: same three participants — user, browser, server — but seven steps instead of four.">
+    <div class="eyebrow warm">The request/response cycle</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}}}%%
+sequenceDiagram
+    participant U as User
+    participant B as Browser (htmx.js)
+    participant S as Server
+
+    U->>B: Triggers hx-trigger event (change)
+    B->>S: HTTP GET/POST to hx-get/hx-post URL
+    S-->>B: HTML fragment (not JSON, not commands)
+    B->>U: hx-swap drops it into hx-target
+</pre>
+      </div>
+      <p class="caption">Same three participants — user, browser, server. Seven steps in the Ajax version. Four here.</p>
+    </div>
+  </section>
+
+  <!-- 20: THE BIGGER IDEA -->
+  <section class="slide" data-notes="There's no separate JSON API here, no client-side templating layer reconstructing HTML from data. The server decides what HTML comes back — same as it always has for the initial page load. HTMX isn't a new architecture. It's closing the gap between 'first page load' and 'everything after,' so both work the same way. That's what 'hypermedia-driven' means — the response is the next state of the UI, already rendered.">
+    <div class="eyebrow warm">The bigger idea</div>
+    <div class="slide-body">
+      <h2 class="display lg">The response <em>is</em> the next state of the UI — already rendered.</h2>
+      <p class="lede">No separate JSON API. No client-side templating layer. HTMX just closes the gap between the first page load and everything after, so both work the same way.</p>
+    </div>
+  </section>
+
+  <!-- 21: CHEAT SHEET -->
+  <section class="slide" data-notes="Four core attributes: verb (hx-get/post/put/delete), trigger (hx-trigger — any DOM event), target (hx-target — any element), swap (hx-swap — innerHTML, outerHTML, beforeend, afterbegin, and more).">
+    <div class="eyebrow warm">Four attributes</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k warm">Verb</span><span class="v"><code class="mono">hx-get</code> / <code class="mono">hx-post</code> / <code class="mono">hx-put</code> / <code class="mono">hx-delete</code></span></div>
+        <div class="pain-card"><span class="k warm">Trigger</span><span class="v"><code class="mono">hx-trigger</code> — any DOM event, not just click/submit</span></div>
+        <div class="pain-card"><span class="k warm">Target</span><span class="v"><code class="mono">hx-target</code> — any element, not just the one that triggered this</span></div>
+        <div class="pain-card"><span class="k warm">Swap</span><span class="v"><code class="mono">hx-swap</code> — innerHTML, outerHTML, beforeend, afterbegin, and more</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22: TRANSITION TO §4 -->
+  <section class="slide" data-notes="So HTMX gives Drupal back a vocabulary it never actually lost — hypermedia. The real question is how that maps onto Drupal's own architecture: render arrays, routing, caching. That's next.">
+    <div class="eyebrow warm">Coming up</div>
+    <div class="slide-body">
+      <h2 class="display lg">HTMX gives Drupal back a vocabulary it never lost — hypermedia.</h2>
+      <p class="lede">Next: mapping that onto Drupal's own architecture — render arrays, routing, caching.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: mapping to Drupal</span>
+    </footer>
+  </section>
+
   <button class="navzone left" aria-label="Previous slide" onclick="go(-1)"></button>
   <button class="navzone right" aria-label="Next slide" onclick="go(1)"></button>
 
@@ -459,7 +556,7 @@ flowchart LR
 
 <div class="controls">
   <button class="navbtn" onclick="go(-1)">&larr; Prev</button>
-  <span class="mono" id="counter">1 / 15</span>
+  <span class="mono" id="counter">1 / 22</span>
   <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   <button class="navbtn" id="notesBtn" onclick="toggleNotes()">Notes (N)</button>
   <button class="navbtn" onclick="go(1)">Next &rarr;</button>
