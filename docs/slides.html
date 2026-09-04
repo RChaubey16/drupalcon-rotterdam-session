@@ -1,0 +1,500 @@
+<title>Ajax to HTMX</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#12141c;
+    --surface:#1a1e29;
+    --surface-2:#20263380;
+    --text:#ece9e2;
+    --text-dim:#9aa0b3;
+    --text-faint:#5c6274;
+    --rule:#2b3040;
+    --ajax:#6a93d9;
+    --ajax-dim:#3d4f73;
+    --htmx:#f2994a;
+    --code-bg:#0c0e15;
+    --danger:#e8637a;
+  }
+
+  *{box-sizing:border-box;}
+  ::selection{background:var(--ajax-dim);color:var(--text);}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    padding:clamp(14px,3vw,32px);
+    gap:14px;
+  }
+
+  h1,h2,h3{margin:0;text-wrap:balance;font-weight:600;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--ajax);outline-offset:3px;}
+
+  .deck{
+    position:relative;
+    width:100%;
+    max-width:1280px;
+    aspect-ratio:16/9;
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    overflow:hidden;
+    container-type:inline-size;
+    box-shadow:0 30px 80px -30px #00000090;
+  }
+
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    padding:7cqw 7.5cqw;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(10px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .slide.active{opacity:1;pointer-events:auto;transform:translateY(0);z-index:2;}
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .01s linear;transform:none;}
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(11px,1.5cqw,14px);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ajax);
+    display:flex;
+    align-items:center;
+    gap:.6em;
+    margin-bottom:clamp(14px,2.6cqw,26px);
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--rule);}
+  .eyebrow.warm{color:var(--htmx);}
+
+  .slide-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,2cqw,18px);}
+
+  .display{
+    font-family:'Fraunces',Georgia,'Times New Roman',serif;
+    font-weight:600;
+    line-height:1.05;
+    letter-spacing:-.01em;
+  }
+  .display.xl{font-size:clamp(30px,7.6cqw,72px);}
+  .display.lg{font-size:clamp(24px,5.6cqw,52px);}
+  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:500;}
+
+  .sub{font-size:clamp(13px,2cqw,19px);color:var(--text-dim);font-weight:500;}
+  .lede{font-size:clamp(14px,2.1cqw,20px);color:var(--text-dim);max-width:64ch;line-height:1.5;}
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  footer.byline{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    font-family:'JetBrains Mono',monospace;font-size:clamp(10px,1.3cqw,13px);
+    color:var(--text-faint);letter-spacing:.04em;
+  }
+
+  /* Title slide watermark */
+  .watermark{
+    position:absolute;right:-2cqw;bottom:-6cqw;
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:38cqw;color:var(--ajax);opacity:.05;
+    line-height:1;pointer-events:none;user-select:none;
+  }
+
+  /* Mock browser frame for demo teaser */
+  .browser-frame{
+    align-self:center;width:min(78cqw,560px);
+    border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+    background:var(--code-bg);
+  }
+  .browser-frame .chrome{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;
+    background:var(--surface);border-bottom:1px solid var(--rule);
+  }
+  .chrome .dot{width:9px;height:9px;border-radius:50%;background:var(--text-faint);}
+  .chrome .url{
+    flex:1;font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.3cqw,12px);
+    color:var(--text-dim);background:var(--bg);border-radius:4px;padding:4px 10px;
+  }
+  .browser-frame .content{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+  .fake-select{
+    font-family:'Manrope',sans-serif;font-size:clamp(10px,1.4cqw,13px);
+    color:var(--text);background:var(--bg);border:1px solid var(--rule);
+    border-radius:5px;padding:6px 10px;width:fit-content;
+  }
+  .fake-row{height:10px;border-radius:3px;background:var(--rule);}
+  .fake-row:nth-child(2){width:88%;}
+  .fake-row:nth-child(3){width:64%;}
+  .frame-caption{
+    text-align:center;font-family:'JetBrains Mono',monospace;
+    font-size:clamp(9px,1.2cqw,11px);color:var(--text-faint);margin-top:10px;
+  }
+
+  /* Reveal lines */
+  .reveal-lines{display:flex;flex-direction:column;gap:.15em;}
+  .reveal-lines .display{color:var(--text-faint);}
+  .reveal-lines .display.hit{color:var(--text);}
+
+  /* Agenda list */
+  .agenda{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(8px,1.6cqw,14px);}
+  .agenda li{
+    display:grid;grid-template-columns:2.6em 1fr;align-items:baseline;
+    gap:.9em;padding-bottom:clamp(8px,1.6cqw,14px);border-bottom:1px solid var(--rule);
+    font-size:clamp(13px,2cqw,18px);
+  }
+  .agenda li:last-child{border-bottom:none;}
+  .agenda .num{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:.85em;}
+
+  /* Section divider */
+  .divider-num{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:clamp(48px,13cqw,140px);color:var(--ajax-dim);line-height:.8;
+  }
+
+  /* Bullets */
+  .bullets{display:flex;flex-direction:column;gap:clamp(10px,1.8cqw,16px);}
+  .bullets .row{display:flex;gap:.8em;align-items:flex-start;font-size:clamp(13px,2cqw,18px);color:var(--text);}
+  .bullets .row .mk{color:var(--ajax);font-family:'JetBrains Mono',monospace;flex:none;}
+
+  .milestone{display:flex;flex-direction:column;gap:4px;}
+  .milestone .tag{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:clamp(11px,1.5cqw,14px);}
+  .milestone .desc{font-size:clamp(13px,1.9cqw,17px);color:var(--text-dim);}
+
+  /* Diagrams / code */
+  .media-box{
+    background:var(--code-bg);border:1px solid var(--rule);border-radius:8px;
+    padding:clamp(10px,1.8cqw,18px);overflow-x:auto;
+  }
+  .media-box pre.mermaid{margin:0;display:flex;justify-content:center;}
+  pre.code{
+    margin:0;font-family:'JetBrains Mono',monospace;font-size:clamp(10px,1.6cqw,15px);
+    line-height:1.6;color:var(--text-dim);white-space:pre;
+  }
+  pre.code .tok{color:var(--ajax);font-weight:600;}
+  .caption{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);max-width:62ch;}
+
+  /* Card grid */
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.6cqw,16px);}
+  .pain-card{
+    background:var(--code-bg);border:1px solid var(--rule);border-radius:8px;
+    padding:clamp(12px,1.8cqw,18px);display:flex;flex-direction:column;gap:6px;
+  }
+  .pain-card .k{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:clamp(11px,1.6cqw,15px);letter-spacing:.02em;}
+  .pain-card .v{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);line-height:1.4;}
+
+  .story-quote{
+    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(16px,2.8cqw,26px);
+    line-height:1.4;max-width:70ch;
+  }
+
+  .placeholder{color:var(--text-faint);border-bottom:1px dashed var(--text-faint);padding-bottom:1px;}
+
+  /* Controls */
+  .controls{
+    width:100%;max-width:1280px;display:flex;align-items:center;gap:14px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);
+  }
+  .progress-track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--ajax);width:6.66%;transition:width .3s ease;}
+  .navbtn{
+    background:none;border:1px solid var(--rule);color:var(--text-dim);
+    border-radius:6px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+  .navbtn:hover{border-color:var(--ajax);color:var(--text);}
+  .navzone{position:absolute;top:0;bottom:64px;width:14%;background:transparent;border:none;cursor:pointer;}
+  .navzone.left{left:0;}
+  .navzone.right{right:0;}
+
+  /* Notes panel */
+  .notes-panel{
+    position:absolute;left:0;right:0;bottom:0;max-height:0;overflow:hidden;
+    background:#0a0b10ee;border-top:1px solid var(--rule);
+    transition:max-height .3s ease;z-index:5;
+  }
+  .notes-panel.open{max-height:46%;overflow-y:auto;}
+  .notes-inner{padding:clamp(12px,2cqw,20px);display:flex;flex-direction:column;gap:8px;}
+  .notes-inner .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--htmx);text-transform:uppercase;}
+  .notes-inner p{font-size:clamp(12px,1.6cqw,15px);color:var(--text-dim);line-height:1.55;max-width:78ch;}
+</style>
+
+<div class="deck" id="deck">
+
+  <!-- 1: TITLE -->
+  <section class="slide active" data-notes="Open cold — screen already up for the live filter demo. No spoken line yet.">
+    <span class="watermark">&lt;/&gt;</span>
+    <div class="eyebrow">DrupalCon Rotterdam &middot; 29 Sep 2026</div>
+    <div class="slide-body">
+      <h1 class="display xl">From Ajax API<br>to HTMX</h1>
+      <p class="sub">Evolving Drupal Interactions</p>
+    </div>
+    <footer class="byline">
+      <span>Ruturaj Chaubey — <span class="placeholder">add role / company</span></span>
+      <span>Development, AI &amp; Agentic Architecture</span>
+    </footer>
+  </section>
+
+  <!-- 2: DEMO TEASER -->
+  <section class="slide" data-notes="Silent 15-20s clip: a filter on a Drupal listing page updates instantly as you type. No visible reload, no JS file open anywhere. Let it play, then pause on the result.">
+    <div class="eyebrow">Live &middot; 15 sec</div>
+    <div class="slide-body" style="justify-content:center;">
+      <div class="browser-frame">
+        <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yoursite.example/articles</span></div>
+        <div class="content">
+          <div class="fake-select">Filter by: Recipes ▾</div>
+          <div class="fake-row"></div>
+          <div class="fake-row"></div>
+          <div class="fake-row"></div>
+        </div>
+      </div>
+      <div class="frame-caption">mockup — live demo plays here in the browser</div>
+    </div>
+  </section>
+
+  <!-- 3: REVEAL -->
+  <section class="slide" data-notes="“That's a live filter. No JavaScript file. No Ajax command class. Just HTML.”">
+    <div class="eyebrow">What just happened</div>
+    <div class="slide-body reveal-lines">
+      <h2 class="display lg hit">That's a live filter.</h2>
+      <h2 class="display lg">No JavaScript file.</h2>
+      <h2 class="display lg">No Ajax command class.</h2>
+      <h2 class="display lg hit">Just HTML.</h2>
+    </div>
+  </section>
+
+  <!-- 4: SELF INTRO -->
+  <section class="slide" data-notes="Hi, I'm Ruturaj — [role]. I've spent a good chunk of the last few years building interactive Drupal sites the traditional way, callbacks and all — which is exactly why I got excited when HTMX showed up.">
+    <div class="eyebrow">Who's talking</div>
+    <div class="slide-body">
+      <h2 class="display lg">Ruturaj Chaubey</h2>
+      <p class="sub placeholder">add role / company</p>
+      <p class="lede">Spent a good chunk of the last few years building interactive Drupal sites the traditional way — callbacks and all. Which is exactly why HTMX got me excited.</p>
+    </div>
+  </section>
+
+  <!-- 5: FRAMING QUOTE -->
+  <section class="slide" data-notes="Land the quote with room to breathe.">
+    <div class="eyebrow">The premise</div>
+    <div class="slide-body" style="justify-content:center;">
+      <h2 class="display xl">&ldquo;The future of Drupal UX isn't more JS. It's smarter HTML — with HTMX.&rdquo;</h2>
+    </div>
+  </section>
+
+  <!-- 6: AGENDA -->
+  <section class="slide" data-notes="Over the next 45 minutes, we'll do four things: look at why Ajax API gets painful at scale, learn HTMX's core idea, map that idea directly onto Drupal's render/routing/caching system, then watch it work live. We'll close with an honest comparison and how to bring this into a project you already have.">
+    <div class="eyebrow">Where we're headed &middot; 45 min</div>
+    <div class="slide-body">
+      <ol class="agenda">
+        <li><span class="num">01</span><span>Why the Ajax API gets painful at scale</span></li>
+        <li><span class="num">02</span><span>HTMX's core idea</span></li>
+        <li><span class="num">03</span><span>Mapping that idea onto Drupal's render, routing &amp; caching</span></li>
+        <li><span class="num">04</span><span>Live: a form, a filter, a partial update — barely any JS</span></li>
+        <li><span class="num">05</span><span>Ajax API vs HTMX, compared honestly</span></li>
+        <li><span class="num">06</span><span>Bringing it into a project you already have</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7: SECTION DIVIDER -->
+  <section class="slide" data-notes="Let's start with where we are today — the Ajax API.">
+    <div class="eyebrow">Section 02 &middot; 6 min</div>
+    <div class="slide-body">
+      <div class="divider-num">02</div>
+      <h2 class="display lg">Ajax API: Evolution &amp; Pain Points</h2>
+    </div>
+  </section>
+
+  <!-- 8: EVOLUTION -->
+  <section class="slide" data-notes="Drupal's Ajax API isn't new — it's been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony's HttpKernel — AjaxResponse extends Symfony's Response, and interactions are expressed as a stack of Command objects. It's mature, well-documented, and used everywhere in core — exposed filters, autocomplete, modal dialogs, inline entity forms. This isn't a story about a broken system. It's a story about a system that was the right answer for 2011, and is starting to show its age.">
+    <div class="eyebrow">A brief history</div>
+    <div class="slide-body">
+      <div class="milestone">
+        <span class="tag">Drupal 7</span>
+        <span class="desc display md" style="font-weight:400;">Ajax API unified into a single core framework</span>
+      </div>
+      <div class="milestone">
+        <span class="tag">Drupal 8 &rarr; 11</span>
+        <span class="desc display md" style="font-weight:400;">Rebuilt on Symfony's HttpKernel — <code class="mono">AjaxResponse</code> extends <code class="mono">Response</code>; interactions become a stack of Commands</span>
+      </div>
+      <p class="lede">Mature. Well-documented. Everywhere in core — exposed filters, autocomplete, modals, inline entity forms.</p>
+      <p class="sub">The right answer for 2011.</p>
+    </div>
+  </section>
+
+  <!-- 9: MECHANICS -->
+  <section class="slide" data-notes="A form/render element gets an #ajax property: callback, wrapper, event. The callback runs server-side and returns an AjaxResponse built from one or more Commands. The client-side core/drupal.ajax library plus Drupal.behaviors interpret those commands and mutate the DOM.">
+    <div class="eyebrow">The mechanics</div>
+    <div class="slide-body bullets">
+      <div class="row"><span class="mk">01</span><span>An element gets an <code class="mono">#ajax</code> property — <code class="mono">callback</code>, <code class="mono">wrapper</code>, <code class="mono">event</code></span></div>
+      <div class="row"><span class="mk">02</span><span>The callback returns an <code class="mono">AjaxResponse</code> built from one or more Commands</span></div>
+      <div class="row"><span class="mk">03</span><span><code class="mono">core/drupal.ajax</code> + <code class="mono">Drupal.behaviors</code> interpret those commands client-side</span></div>
+    </div>
+  </section>
+
+  <!-- 10: SEQUENCE DIAGRAM -->
+  <section class="slide" data-notes="Walk through the diagram: user triggers the #ajax event, browser sends an XHR to the callback, server builds an AjaxResponse with commands, browser interprets and updates the DOM.">
+    <div class="eyebrow">The request/response cycle</div>
+    <div class="slide-body" style="justify-content:center;">
+      <div class="media-box">
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}}}%%
+sequenceDiagram
+    participant U as User
+    participant B as Browser (core/drupal.ajax)
+    participant S as Drupal (PHP callback)
+
+    U->>B: Triggers #ajax event (change/click)
+    B->>S: XHR request to callback
+    S->>S: Build AjaxResponse
+    S->>S: addCommand(ReplaceCommand, ...)
+    S-->>B: JSON: stack of commands
+    B->>B: Drupal.behaviors interprets commands
+    B->>U: DOM updated (#results-wrapper replaced)
+</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11: CODE SNIPPET -->
+  <section class="slide" data-notes="Two files, two languages, and a wrapper ID string that has to match exactly in both places, or nothing happens — silently.">
+    <div class="eyebrow">In code</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">$form['filter'] = [
+  '#type' =&gt; 'select',
+  <span class="tok">'#ajax'</span> =&gt; [
+    'callback' =&gt; '::updateResults',
+    'wrapper' =&gt; <span class="tok">'results-wrapper'</span>,
+    'event' =&gt; 'change',
+  ],
+];
+
+public function updateResults(array &amp;$form, FormStateInterface $form_state) {
+  $response = new <span class="tok">AjaxResponse</span>();
+  $response-&gt;addCommand(new <span class="tok">ReplaceCommand</span>('#<span class="tok">results-wrapper</span>', $form['results']));
+  return $response;
+}</pre>
+      </div>
+      <p class="caption">Two files. Two languages. One wrapper ID that has to match exactly — or nothing happens. Silently.</p>
+    </div>
+  </section>
+
+  <!-- 12: COUPLING DIAGRAM -->
+  <section class="slide" data-notes="One string, defined in two files, in two languages, with no compiler or linter checking they agree. Get it wrong, and nothing throws an error — it just silently doesn't work.">
+    <div class="eyebrow">Where it silently breaks</div>
+    <div class="slide-body" style="justify-content:center;">
+      <div class="media-box">
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace'}}}%%
+flowchart LR
+    subgraph PHP["MyForm.php"]
+        A["#ajax wrapper: 'results-wrapper'"]
+        B["ReplaceCommand('#results-wrapper', ...)"]
+    end
+    subgraph JS["my_module.js — 3 directories away"]
+        C["id: 'results-wrapper'"]
+    end
+    A -.must match exactly.-> C
+    B -.must match exactly.-> C
+    style C fill:#e8637a,stroke:#a13349,color:#12141c
+</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13: FOUR PAIN POINTS -->
+  <section class="slide" data-notes="Four pain points: JS coupling, complexity, maintenance overhead, discoverability.">
+    <div class="eyebrow">Four pain points</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">JS coupling</span><span class="v">Every interaction needs a matching PHP command + JS behavior pair.</span></div>
+        <div class="pain-card"><span class="k">Complexity</span><span class="v">An imperative command stack, not a description of the result.</span></div>
+        <div class="pain-card"><span class="k">Maintenance overhead</span><span class="v">One typo, no error, silent failure.</span></div>
+        <div class="pain-card"><span class="k">Discoverability</span><span class="v">The markup never says it's interactive.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14: STORY -->
+  <section class="slide" data-notes="I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn't in the PHP, and it wasn't in the JS logic — it was a mismatched wrapper ID, one string, defined in a .js file three directories away from the PHP that built the response. Nothing threw an error. It just... didn't work. This is exactly the bug the earlier diagram illustrates.">
+    <div class="eyebrow">A true story</div>
+    <div class="slide-body" style="justify-content:center;">
+      <p class="story-quote">&ldquo;40 minutes in devtools. The bug wasn't PHP. It wasn't JS logic. It was one mismatched wrapper ID — three directories away. Nothing threw an error. It just didn't work.&rdquo;</p>
+    </div>
+  </section>
+
+  <!-- 15: CLOSING TEASE -->
+  <section class="slide" data-notes="So what if, instead of a PHP command and a matching JS behavior for every interaction, the element itself could just describe what it needs — when this changes, fetch this URL, and drop the result here? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like? (pause, slide transition — next section opens with the reveal: That's not a hypothetical. It's called HTMX...)">
+    <div class="eyebrow">So what if&hellip;</div>
+    <div class="slide-body">
+      <h2 class="display lg">&hellip;the element itself could just describe what it needs?</h2>
+      <p class="lede">No command classes. No wrapper-ID matching. No second file to go find.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span class="eyebrow warm" style="margin:0;">&rarr; next: HTMX</span>
+    </footer>
+  </section>
+
+  <button class="navzone left" aria-label="Previous slide" onclick="go(-1)"></button>
+  <button class="navzone right" aria-label="Next slide" onclick="go(1)"></button>
+
+  <div class="notes-panel" id="notesPanel">
+    <div class="notes-inner">
+      <span class="lbl">Speaker notes</span>
+      <p id="notesText"></p>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="navbtn" onclick="go(-1)">&larr; Prev</button>
+  <span class="mono" id="counter">1 / 15</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="navbtn" id="notesBtn" onclick="toggleNotes()">Notes (N)</button>
+  <button class="navbtn" onclick="go(1)">Next &rarr;</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0;
+  let notesOpen = false;
+
+  function render(){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    document.getElementById('counter').textContent = (idx+1) + ' / ' + total;
+    document.getElementById('progressFill').style.width = (((idx+1)/total)*100) + '%';
+    document.getElementById('notesText').textContent = slides[idx].dataset.notes || '';
+  }
+
+  function go(delta){
+    idx = Math.min(total-1, Math.max(0, idx+delta));
+    render();
+  }
+
+  function toggleNotes(){
+    notesOpen = !notesOpen;
+    document.getElementById('notesPanel').classList.toggle('open', notesOpen);
+  }
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight' || e.key===' ') { go(1); e.preventDefault(); }
+    else if(e.key==='ArrowLeft') { go(-1); e.preventDefault(); }
+    else if(e.key.toLowerCase()==='n') { toggleNotes(); }
+    else if(e.key==='Home') { idx=0; render(); }
+    else if(e.key==='End') { idx=total-1; render(); }
+  });
+
+  render();
+</script>
