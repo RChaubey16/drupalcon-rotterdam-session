@@ -255,7 +255,7 @@
 <div class="deck" id="deck">
 
   <!-- 1: TITLE -->
-  <section class="slide active" data-notes="Open cold — screen already up for the live filter demo. No spoken line yet.">
+  <section class="slide active" data-notes="Open cold - screen already up for the live filter demo. No spoken line yet.">
     <span class="watermark">&lt;/&gt;</span>
     <div class="eyebrow">DrupalCon Rotterdam &middot; 29 Sep 2026</div>
     <div class="slide-body">
@@ -263,7 +263,7 @@
       <p class="sub">Evolving Drupal Interactions</p>
     </div>
     <footer class="byline">
-      <span>Ruturaj Chaubey — <span class="placeholder">add role / company</span></span>
+      <span>Ruturaj Chaubey - <span class="placeholder">add role / company</span></span>
       <span>Development, AI &amp; Agentic Architecture</span>
     </footer>
   </section>
@@ -281,7 +281,7 @@
           <div class="fake-row"></div>
         </div>
       </div>
-      <div class="frame-caption">mockup — live demo plays here in the browser</div>
+      <div class="frame-caption">mockup - live demo plays here in the browser</div>
     </div>
   </section>
 
@@ -297,12 +297,12 @@
   </section>
 
   <!-- 4: SELF INTRO -->
-  <section class="slide" data-notes="Hi, I'm Ruturaj — [role]. I've spent a good chunk of the last few years building interactive Drupal sites the traditional way, callbacks and all — which is exactly why I got excited when HTMX showed up.">
+  <section class="slide" data-notes="Hi, I'm Ruturaj - [role]. I've spent a good chunk of the last few years building interactive Drupal sites the traditional way, callbacks and all - which is exactly why I got excited when HTMX showed up.">
     <div class="eyebrow">Who's talking</div>
     <div class="slide-body">
       <h2 class="display lg">Ruturaj Chaubey</h2>
       <p class="sub placeholder">add role / company</p>
-      <p class="lede">Spent a good chunk of the last few years building interactive Drupal sites the traditional way — callbacks and all. Which is exactly why HTMX got me excited.</p>
+      <p class="lede">Spent a good chunk of the last few years building interactive Drupal sites the traditional way - callbacks and all. Which is exactly why HTMX got me excited.</p>
     </div>
   </section>
 
@@ -310,7 +310,7 @@
   <section class="slide" data-notes="Land the quote with room to breathe.">
     <div class="eyebrow">The premise</div>
     <div class="slide-body" style="justify-content:center;">
-      <h2 class="display xl">&ldquo;The future of Drupal UX isn't more JS. It's smarter HTML — with HTMX.&rdquo;</h2>
+      <h2 class="display xl">&ldquo;The future of Drupal UX isn't more JS. It's smarter HTML - with HTMX.&rdquo;</h2>
     </div>
   </section>
 
@@ -322,7 +322,7 @@
         <li><span class="num">01</span><span>Why the Ajax API gets painful at scale</span></li>
         <li><span class="num">02</span><span>HTMX's core idea</span></li>
         <li><span class="num">03</span><span>Mapping that idea onto Drupal's render, routing &amp; caching</span></li>
-        <li><span class="num">04</span><span>Live: a form, a filter, a partial update — barely any JS</span></li>
+        <li><span class="num">04</span><span>Live: a form, a filter, a partial update - barely any JS</span></li>
         <li><span class="num">05</span><span>Ajax API vs HTMX, compared honestly</span></li>
         <li><span class="num">06</span><span>Bringing it into a project you already have</span></li>
       </ol>
@@ -330,7 +330,7 @@
   </section>
 
   <!-- 7: SECTION DIVIDER -->
-  <section class="slide" data-notes="Let's start with where we are today — the Ajax API.">
+  <section class="slide" data-notes="Let's start with where we are today - the Ajax API.">
     <div class="eyebrow">Section 02 &middot; 6 min</div>
     <div class="slide-body">
       <div class="divider-num">02</div>
@@ -339,7 +339,7 @@
   </section>
 
   <!-- 8: EVOLUTION -->
-  <section class="slide" data-notes="Drupal's Ajax API isn't new — it's been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony's HttpKernel — AjaxResponse extends Symfony's Response, and interactions are expressed as a stack of Command objects. It's mature, well-documented, and used everywhere in core — exposed filters, autocomplete, modal dialogs, inline entity forms. This isn't a story about a broken system. It's a story about a system that was the right answer for 2011, and is starting to show its age.">
+  <section class="slide" data-notes="Drupal's Ajax API isn't new - it's been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony's HttpKernel - AjaxResponse extends Symfony's Response, and interactions are expressed as a stack of Command objects. It's mature, well-documented, and used everywhere in core - exposed filters, autocomplete, modal dialogs, inline entity forms. This isn't a story about a broken system. It's a story about a system that was the right answer for 2011, and is starting to show its age.">
     <div class="eyebrow">A brief history</div>
     <div class="slide-body">
       <div class="milestone">
@@ -348,9 +348,9 @@
       </div>
       <div class="milestone">
         <span class="tag">Drupal 8 &rarr; 11</span>
-        <span class="desc display md" style="font-weight:400;">Rebuilt on Symfony's HttpKernel — <code class="mono">AjaxResponse</code> extends <code class="mono">Response</code>; interactions become a stack of Commands</span>
+        <span class="desc display md" style="font-weight:400;">Rebuilt on Symfony's HttpKernel - <code class="mono">AjaxResponse</code> extends <code class="mono">Response</code>; interactions become a stack of Commands</span>
       </div>
-      <p class="lede">Mature. Well-documented. Everywhere in core — exposed filters, autocomplete, modals, inline entity forms.</p>
+      <p class="lede">Mature. Well-documented. Everywhere in core - exposed filters, autocomplete, modals, inline entity forms.</p>
       <p class="sub">The right answer for 2011.</p>
     </div>
   </section>
@@ -359,7 +359,7 @@
   <section class="slide" data-notes="A form/render element gets an #ajax property: callback, wrapper, event. The callback runs server-side and returns an AjaxResponse built from one or more Commands. The client-side core/drupal.ajax library plus Drupal.behaviors interpret those commands and mutate the DOM.">
     <div class="eyebrow">The mechanics</div>
     <div class="slide-body bullets">
-      <div class="row"><span class="mk">01</span><span>An element gets an <code class="mono">#ajax</code> property — <code class="mono">callback</code>, <code class="mono">wrapper</code>, <code class="mono">event</code></span></div>
+      <div class="row"><span class="mk">01</span><span>An element gets an <code class="mono">#ajax</code> property - <code class="mono">callback</code>, <code class="mono">wrapper</code>, <code class="mono">event</code></span></div>
       <div class="row"><span class="mk">02</span><span>The callback returns an <code class="mono">AjaxResponse</code> built from one or more Commands</span></div>
       <div class="row"><span class="mk">03</span><span><code class="mono">core/drupal.ajax</code> + <code class="mono">Drupal.behaviors</code> interpret those commands client-side</span></div>
     </div>
@@ -390,7 +390,7 @@ sequenceDiagram
   </section>
 
   <!-- 11: CODE SNIPPET -->
-  <section class="slide" data-notes="Two files, two languages, and a wrapper ID string that has to match exactly in both places, or nothing happens — silently.">
+  <section class="slide" data-notes="Two files, two languages, and a wrapper ID string that has to match exactly in both places, or nothing happens - silently.">
     <div class="eyebrow">In code</div>
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
@@ -409,12 +409,12 @@ public function updateResults(array &amp;$form, FormStateInterface $form_state) 
   return $response;
 }</pre>
       </div>
-      <p class="caption">Two files. Two languages. One wrapper ID that has to match exactly — or nothing happens. Silently.</p>
+      <p class="caption">Two files. Two languages. One wrapper ID that has to match exactly - or nothing happens. Silently.</p>
     </div>
   </section>
 
   <!-- 12: COUPLING DIAGRAM -->
-  <section class="slide" data-notes="One string, defined in two files, in two languages, with no compiler or linter checking they agree. Get it wrong, and nothing throws an error — it just silently doesn't work.">
+  <section class="slide" data-notes="One string, defined in two files, in two languages, with no compiler or linter checking they agree. Get it wrong, and nothing throws an error - it just silently doesn't work.">
     <div class="eyebrow">Where it silently breaks</div>
     <div class="slide-body" style="justify-content:center;">
       <div class="media-box">
@@ -425,7 +425,7 @@ flowchart LR
         A["#ajax wrapper: 'results-wrapper'"]
         B["ReplaceCommand('#results-wrapper', ...)"]
     end
-    subgraph JS["my_module.js — 3 directories away"]
+    subgraph JS["my_module.js - 3 directories away"]
         C["id: 'results-wrapper'"]
     end
     A -.must match exactly.-> C
@@ -450,15 +450,15 @@ flowchart LR
   </section>
 
   <!-- 14: STORY -->
-  <section class="slide" data-notes="I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn't in the PHP, and it wasn't in the JS logic — it was a mismatched wrapper ID, one string, defined in a .js file three directories away from the PHP that built the response. Nothing threw an error. It just... didn't work. This is exactly the bug the earlier diagram illustrates.">
+  <section class="slide" data-notes="I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn't in the PHP, and it wasn't in the JS logic - it was a mismatched wrapper ID, one string, defined in a .js file three directories away from the PHP that built the response. Nothing threw an error. It just... didn't work. This is exactly the bug the earlier diagram illustrates.">
     <div class="eyebrow">A true story</div>
     <div class="slide-body" style="justify-content:center;">
-      <p class="story-quote">&ldquo;40 minutes in devtools. The bug wasn't PHP. It wasn't JS logic. It was one mismatched wrapper ID — three directories away. Nothing threw an error. It just didn't work.&rdquo;</p>
+      <p class="story-quote">&ldquo;40 minutes in devtools. The bug wasn't PHP. It wasn't JS logic. It was one mismatched wrapper ID - three directories away. Nothing threw an error. It just didn't work.&rdquo;</p>
     </div>
   </section>
 
   <!-- 15: CLOSING TEASE -->
-  <section class="slide" data-notes="So what if, instead of a PHP command and a matching JS behavior for every interaction, the element itself could just describe what it needs — when this changes, fetch this URL, and drop the result here? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like? (pause, slide transition — next section opens with the reveal: That's not a hypothetical. It's called HTMX...)">
+  <section class="slide" data-notes="So what if, instead of a PHP command and a matching JS behavior for every interaction, the element itself could just describe what it needs - when this changes, fetch this URL, and drop the result here? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like? (pause, slide transition - next section opens with the reveal: That's not a hypothetical. It's called HTMX...)">
     <div class="eyebrow">So what if&hellip;</div>
     <div class="slide-body">
       <h2 class="display lg">&hellip;the element itself could just describe what it needs?</h2>
@@ -471,7 +471,7 @@ flowchart LR
   </section>
 
   <!-- 16: HTMX REVEAL -->
-  <section class="slide" data-notes="That's not a hypothetical. It's called HTMX — and it's built on an idea that's actually older than Ajax: hypermedia.">
+  <section class="slide" data-notes="That's not a hypothetical. It's called HTMX - and it's built on an idea that's actually older than Ajax: hypermedia.">
     <div class="eyebrow warm">Section 03 &middot; The Reveal</div>
     <div class="slide-body reveal-lines">
       <h2 class="display lg">That's not a hypothetical.</h2>
@@ -481,15 +481,15 @@ flowchart LR
   </section>
 
   <!-- 17: THE HYPERMEDIA IDEA -->
-  <section class="slide" data-notes="You already know hypermedia. Every &lt;a href&gt; and every &lt;form&gt; you've ever written is a hypermedia control — an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.">
+  <section class="slide" data-notes="You already know hypermedia. Every &lt;a href&gt; and every &lt;form&gt; you've ever written is a hypermedia control - an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.">
     <div class="eyebrow warm">The idea</div>
     <div class="slide-body" style="justify-content:center;">
-      <p class="story-quote">You already know hypermedia. Every <code class="mono">&lt;a href&gt;</code> and every <code class="mono">&lt;form&gt;</code> you've ever written is a hypermedia control — an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.</p>
+      <p class="story-quote">You already know hypermedia. Every <code class="mono">&lt;a href&gt;</code> and every <code class="mono">&lt;form&gt;</code> you've ever written is a hypermedia control - an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.</p>
     </div>
   </section>
 
   <!-- 18: CORE SYNTAX CODE -->
-  <section class="slide" data-notes="One element. Four attributes. The behavior lives right there in the tag — no PHP file to go find, no wrapper ID to keep in sync across two files.">
+  <section class="slide" data-notes="One element. Four attributes. The behavior lives right there in the tag - no PHP file to go find, no wrapper ID to keep in sync across two files.">
     <div class="eyebrow warm">In code</div>
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
@@ -504,12 +504,12 @@ flowchart LR
   &lt;!-- server returns just this fragment --&gt;
 &lt;/div&gt;</pre>
       </div>
-      <p class="caption">One element. Four attributes. The behavior lives right there in the tag — no PHP file to go find, no wrapper ID to keep in sync across two files.</p>
+      <p class="caption">One element. Four attributes. The behavior lives right there in the tag - no PHP file to go find, no wrapper ID to keep in sync across two files.</p>
     </div>
   </section>
 
   <!-- 19: HTMX SEQUENCE DIAGRAM -->
-  <section class="slide" data-notes="Compare that to the version you saw ten minutes ago: same three participants — user, browser, server — but seven steps instead of four.">
+  <section class="slide" data-notes="Compare that to the version you saw ten minutes ago: same three participants - user, browser, server - but seven steps instead of four.">
     <div class="eyebrow warm">The request/response cycle</div>
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
@@ -526,38 +526,38 @@ sequenceDiagram
     B->>U: hx-swap drops it into hx-target
 </pre>
       </div>
-      <p class="caption">Same three participants — user, browser, server. Seven steps in the Ajax version. Four here.</p>
+      <p class="caption">Same three participants - user, browser, server. Seven steps in the Ajax version. Four here.</p>
     </div>
   </section>
 
   <!-- 20: THE BIGGER IDEA -->
-  <section class="slide" data-notes="There's no separate JSON API here, no client-side templating layer reconstructing HTML from data. The server decides what HTML comes back — same as it always has for the initial page load. HTMX isn't a new architecture. It's closing the gap between 'first page load' and 'everything after,' so both work the same way. That's what 'hypermedia-driven' means — the response is the next state of the UI, already rendered.">
+  <section class="slide" data-notes="There's no separate JSON API here, no client-side templating layer reconstructing HTML from data. The server decides what HTML comes back - same as it always has for the initial page load. HTMX isn't a new architecture. It's closing the gap between 'first page load' and 'everything after,' so both work the same way. That's what 'hypermedia-driven' means - the response is the next state of the UI, already rendered.">
     <div class="eyebrow warm">The bigger idea</div>
     <div class="slide-body">
-      <h2 class="display lg">The response <em>is</em> the next state of the UI — already rendered.</h2>
+      <h2 class="display lg">The response <em>is</em> the next state of the UI - already rendered.</h2>
       <p class="lede">No separate JSON API. No client-side templating layer. HTMX just closes the gap between the first page load and everything after, so both work the same way.</p>
     </div>
   </section>
 
   <!-- 21: CHEAT SHEET -->
-  <section class="slide" data-notes="Four core attributes: verb (hx-get/post/put/delete), trigger (hx-trigger — any DOM event), target (hx-target — any element), swap (hx-swap — innerHTML, outerHTML, beforeend, afterbegin, and more).">
+  <section class="slide" data-notes="Four core attributes: verb (hx-get/post/put/delete), trigger (hx-trigger - any DOM event), target (hx-target - any element), swap (hx-swap - innerHTML, outerHTML, beforeend, afterbegin, and more).">
     <div class="eyebrow warm">Four attributes</div>
     <div class="slide-body">
       <div class="card-grid">
         <div class="pain-card"><span class="k warm">Verb</span><span class="v"><code class="mono">hx-get</code> / <code class="mono">hx-post</code> / <code class="mono">hx-put</code> / <code class="mono">hx-delete</code></span></div>
-        <div class="pain-card"><span class="k warm">Trigger</span><span class="v"><code class="mono">hx-trigger</code> — any DOM event, not just click/submit</span></div>
-        <div class="pain-card"><span class="k warm">Target</span><span class="v"><code class="mono">hx-target</code> — any element, not just the one that triggered this</span></div>
-        <div class="pain-card"><span class="k warm">Swap</span><span class="v"><code class="mono">hx-swap</code> — innerHTML, outerHTML, beforeend, afterbegin, and more</span></div>
+        <div class="pain-card"><span class="k warm">Trigger</span><span class="v"><code class="mono">hx-trigger</code> - any DOM event, not just click/submit</span></div>
+        <div class="pain-card"><span class="k warm">Target</span><span class="v"><code class="mono">hx-target</code> - any element, not just the one that triggered this</span></div>
+        <div class="pain-card"><span class="k warm">Swap</span><span class="v"><code class="mono">hx-swap</code> - innerHTML, outerHTML, beforeend, afterbegin, and more</span></div>
       </div>
     </div>
   </section>
 
   <!-- 22: TRANSITION TO §4 -->
-  <section class="slide" data-notes="So HTMX gives Drupal back a vocabulary it never actually lost — hypermedia. The real question is how that maps onto Drupal's own architecture: render arrays, routing, caching. That's next.">
+  <section class="slide" data-notes="So HTMX gives Drupal back a vocabulary it never actually lost - hypermedia. The real question is how that maps onto Drupal's own architecture: render arrays, routing, caching. That's next.">
     <div class="eyebrow warm">Coming up</div>
     <div class="slide-body">
-      <h2 class="display lg">HTMX gives Drupal back a vocabulary it never lost — hypermedia.</h2>
-      <p class="lede">Next: mapping that onto Drupal's own architecture — render arrays, routing, caching.</p>
+      <h2 class="display lg">HTMX gives Drupal back a vocabulary it never lost - hypermedia.</h2>
+      <p class="lede">Next: mapping that onto Drupal's own architecture - render arrays, routing, caching.</p>
     </div>
     <footer class="byline">
       <span></span>
@@ -578,12 +578,12 @@ sequenceDiagram
   <section class="slide" data-notes="HTMX doesn't need anything special from Drupal. It needs three things Drupal already has, and has had for over a decade: routes, render arrays, and cache metadata. Let's map them one at a time.">
     <div class="eyebrow warm">The question</div>
     <div class="slide-body" style="justify-content:center;">
-      <p class="story-quote">HTMX doesn't need anything special from Drupal. It needs three things Drupal already has &mdash; and has had for over a decade.</p>
+      <p class="story-quote">HTMX doesn't need anything special from Drupal. It needs three things Drupal already has - and has had for over a decade.</p>
     </div>
   </section>
 
   <!-- 25: ROUTING -->
-  <section class="slide" data-notes="An hx-get URL isn't a special Ajax callback — it's a normal Drupal route. No #ajax property, no form-building context required.">
+  <section class="slide" data-notes="An hx-get URL isn't a special Ajax callback - it's a normal Drupal route. No #ajax property, no form-building context required.">
     <div class="eyebrow warm">Routing</div>
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
@@ -594,12 +594,12 @@ sequenceDiagram
   requirements:
     _access: 'TRUE'</pre>
       </div>
-      <p class="caption"><code class="mono">hx-get="/filter-results"</code> isn't a special Ajax callback. It's a normal Drupal route &mdash; no <code class="mono">#ajax</code> property, no form-building context required.</p>
+      <p class="caption"><code class="mono">hx-get="/filter-results"</code> isn't a special Ajax callback. It's a normal Drupal route - no <code class="mono">#ajax</code> property, no form-building context required.</p>
     </div>
   </section>
 
   <!-- 26: RENDER ARRAYS -->
-  <section class="slide" data-notes="The controller returns a render array — the same thing every Drupal controller has always returned. Drupal renders it to HTML. HTMX drops that HTML wherever hx-target points. No AjaxResponse, no Commands — the render pipeline was already built to produce exactly this.">
+  <section class="slide" data-notes="The controller returns a render array - the same thing every Drupal controller has always returned. Drupal renders it to HTML. HTMX drops that HTML wherever hx-target points. No AjaxResponse, no Commands - the render pipeline was already built to produce exactly this.">
     <div class="eyebrow warm">Render arrays</div>
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
@@ -620,12 +620,12 @@ sequenceDiagram
   </section>
 
   <!-- 27: CACHING PAYOFF -->
-  <section class="slide" data-notes="Here's the part that doesn't exist for the Ajax API without extra work: because this is a plain render array, it gets Drupal's caching for free. Cache tags bubble up automatically, cache contexts vary the response correctly. An AjaxResponse built from Commands doesn't sit in that pipeline the same way — you're mostly on your own for caching an Ajax callback response.">
+  <section class="slide" data-notes="Here's the part that doesn't exist for the Ajax API without extra work: because this is a plain render array, it gets Drupal's caching for free. Cache tags bubble up automatically, cache contexts vary the response correctly. An AjaxResponse built from Commands doesn't sit in that pipeline the same way - you're mostly on your own for caching an Ajax callback response.">
     <div class="eyebrow warm">Where this pays off</div>
     <div class="slide-body">
       <div class="card-grid">
         <div class="pain-card"><span class="k">Ajax API</span><span class="v">An <code class="mono">AjaxResponse</code> built from Commands doesn't sit in the cache pipeline. You're mostly on your own.</span></div>
-        <div class="pain-card"><span class="k warm">HTMX</span><span class="v">A plain render array &mdash; cache tags bubble up, contexts vary the response automatically. Caching for free.</span></div>
+        <div class="pain-card"><span class="k warm">HTMX</span><span class="v">A plain render array - cache tags bubble up, contexts vary the response automatically. Caching for free.</span></div>
       </div>
     </div>
   </section>
@@ -642,7 +642,7 @@ sequenceDiagram
           <tr><td>Correctness under caching</td><td><code class="mono">#cache</code> tags &amp; contexts</td></tr>
         </tbody>
       </table>
-      <p class="lede">Three things Drupal already gives every page. HTMX just asks for them directly &mdash; no translation layer in between.</p>
+      <p class="lede">Three things Drupal already gives every page. HTMX just asks for them directly - no translation layer in between.</p>
     </div>
     <footer class="byline">
       <span></span>
@@ -650,13 +650,13 @@ sequenceDiagram
     </footer>
   </section>
 
-  <!-- 29: SECTION 05 — LIVE DEMO PLACEHOLDER -->
-  <section class="slide" data-notes="[Live demo — build/walk through here] One combined demo covering the dynamic form, filter, and partial update in a single flow, per the session-flow design note.">
+  <!-- 29: SECTION 05 - LIVE DEMO PLACEHOLDER -->
+  <section class="slide" data-notes="[Live demo - build/walk through here] One combined demo covering the dynamic form, filter, and partial update in a single flow, per the session-flow design note.">
     <div class="eyebrow warm">Section 05 &middot; 10 min</div>
     <div class="slide-body">
       <div class="divider-num warm">05</div>
       <h2 class="display lg">Live Demo</h2>
-      <p class="lede placeholder">Placeholder — dynamic form, filter &amp; partial update, one combined demo built/walked through live in the browser.</p>
+      <p class="lede placeholder">Placeholder - dynamic form, filter &amp; partial update, one combined demo built/walked through live in the browser.</p>
     </div>
   </section>
 
@@ -670,14 +670,14 @@ sequenceDiagram
   </section>
 
   <!-- 31: DX & PERFORMANCE -->
-  <section class="slide" data-notes="DX: the Ajax API is more ceremony, but deeply integrated with Form API — multi-step wizards and validation come free. HTMX is far less ceremony, but state management for anything multi-step is on you. Performance: an Ajax response is a JSON command stack interpreted by core/drupal.ajax, with Drupal.behaviors reattaching on every response. HTMX ships a ~14kb library, and the response is the HTML fragment itself.">
+  <section class="slide" data-notes="DX: the Ajax API is more ceremony, but deeply integrated with Form API - multi-step wizards and validation come free. HTMX is far less ceremony, but state management for anything multi-step is on you. Performance: an Ajax response is a JSON command stack interpreted by core/drupal.ajax, with Drupal.behaviors reattaching on every response. HTMX ships a ~14kb library, and the response is the HTML fragment itself.">
     <div class="eyebrow">DX &amp; Performance</div>
     <div class="slide-body" style="gap:16px;">
       <div>
         <p class="sub" style="margin-bottom:8px;">DX</p>
         <div class="card-grid">
-          <div class="pain-card"><span class="k">Ajax API</span><span class="v">More ceremony &mdash; but native Form API integration (wizards, validation) comes free.</span></div>
-          <div class="pain-card"><span class="k warm">HTMX</span><span class="v">Far less ceremony &mdash; but state management for anything multi-step is on you.</span></div>
+          <div class="pain-card"><span class="k">Ajax API</span><span class="v">More ceremony - but native Form API integration (wizards, validation) comes free.</span></div>
+          <div class="pain-card"><span class="k warm">HTMX</span><span class="v">Far less ceremony - but state management for anything multi-step is on you.</span></div>
         </div>
       </div>
       <div>
@@ -691,7 +691,7 @@ sequenceDiagram
   </section>
 
   <!-- 32: DEBUGGING & PROGRESSIVE ENHANCEMENT -->
-  <section class="slide" data-notes="Debugging: in the Ajax API, the Network tab shows an opaque command stack, and a wrapper-ID typo fails silently. With HTMX, the Network tab shows the literal HTML that got inserted. Progressive enhancement: both are progressive by construction, layering JS onto a real form/link element — but honestly, this axis is close to a wash, since both are rarely tested with JS actually disabled.">
+  <section class="slide" data-notes="Debugging: in the Ajax API, the Network tab shows an opaque command stack, and a wrapper-ID typo fails silently. With HTMX, the Network tab shows the literal HTML that got inserted. Progressive enhancement: both are progressive by construction, layering JS onto a real form/link element - but honestly, this axis is close to a wash, since both are rarely tested with JS actually disabled.">
     <div class="eyebrow">Debugging &amp; Progressive Enhancement</div>
     <div class="slide-body" style="gap:16px;">
       <div>
@@ -703,13 +703,13 @@ sequenceDiagram
       </div>
       <div>
         <p class="sub" style="margin-bottom:8px;">Progressive enhancement</p>
-        <p class="lede">Both layer JS onto a real form/link element the same way. Honestly? Close to a wash &mdash; neither gets tested with JS off in most real projects.</p>
+        <p class="lede">Both layer JS onto a real form/link element the same way. Honestly? Close to a wash - neither gets tested with JS off in most real projects.</p>
       </div>
     </div>
   </section>
 
   <!-- 33: VERDICT TABLE -->
-  <section class="slide" data-notes="Four axes, side by side. Progressive enhancement stays a wash on purpose — this isn't a clean sweep for either tool.">
+  <section class="slide" data-notes="Four axes, side by side. Progressive enhancement stays a wash on purpose - this isn't a clean sweep for either tool.">
     <div class="eyebrow">The verdict, side by side</div>
     <div class="slide-body">
       <table class="map-table compare">
@@ -717,19 +717,19 @@ sequenceDiagram
         <tbody>
           <tr><td>DX</td><td>More ceremony, native Form API integration</td><td>Less ceremony, state management is on you</td></tr>
           <tr><td>Performance</td><td>Command-stack + behavior reattachment overhead</td><td>Small library, HTML-fragment response</td></tr>
-          <tr><td>Debugging</td><td>Opaque command stack, silent failures</td><td>Transparent &mdash; see the actual HTML</td></tr>
-          <tr><td>Progressive enhancement</td><td class="wash" colspan="2">Built on the same fallback pattern in both &mdash; rarely tested either way</td></tr>
+          <tr><td>Debugging</td><td>Opaque command stack, silent failures</td><td>Transparent - see the actual HTML</td></tr>
+          <tr><td>Progressive enhancement</td><td class="wash" colspan="2">Built on the same fallback pattern in both - rarely tested either way</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <!-- 34: RECAP / TRANSITION TO §7 -->
-  <section class="slide" data-notes="Pick HTMX where round trips are simple and the UI is a fragment. Keep the Ajax API — or Drupal's own wizard-form machinery — where you need genuine multi-step state. This isn't a replace-everything story. It's a which-tool-for-which-job story. Next: how to actually bring HTMX into a project you already have, without a rewrite.">
+  <section class="slide" data-notes="Pick HTMX where round trips are simple and the UI is a fragment. Keep the Ajax API - or Drupal's own wizard-form machinery - where you need genuine multi-step state. This isn't a replace-everything story. It's a which-tool-for-which-job story. Next: how to actually bring HTMX into a project you already have, without a rewrite.">
     <div class="eyebrow">The take</div>
     <div class="slide-body">
       <h2 class="display lg">Pick the tool for the job, not the trend.</h2>
-      <p class="lede">HTMX where round trips are simple and the UI is a fragment. Ajax API &mdash; or Drupal's own wizard machinery &mdash; where you need genuine multi-step state. This isn't a replace-everything story.</p>
+      <p class="lede">HTMX where round trips are simple and the UI is a fragment. Ajax API - or Drupal's own wizard machinery - where you need genuine multi-step state. This isn't a replace-everything story.</p>
     </div>
     <footer class="byline">
       <span></span>
@@ -737,13 +737,13 @@ sequenceDiagram
     </footer>
   </section>
 
-  <!-- 35: SECTION 07 — INCREMENTAL ADOPTION PLACEHOLDER -->
-  <section class="slide" data-notes="[Incremental adoption strategy — build later] How to introduce HTMX into an existing Drupal project without a rewrite.">
+  <!-- 35: SECTION 07 - INCREMENTAL ADOPTION PLACEHOLDER -->
+  <section class="slide" data-notes="[Incremental adoption strategy - build later] How to introduce HTMX into an existing Drupal project without a rewrite.">
     <div class="eyebrow warm">Section 07 &middot; 4 min</div>
     <div class="slide-body">
       <div class="divider-num warm">07</div>
       <h2 class="display lg">Incremental Adoption Strategy</h2>
-      <p class="lede placeholder">Placeholder — how to introduce HTMX into an existing Drupal project without a rewrite.</p>
+      <p class="lede placeholder">Placeholder - how to introduce HTMX into an existing Drupal project without a rewrite.</p>
     </div>
   </section>
 
