@@ -737,14 +737,139 @@ sequenceDiagram
     </footer>
   </section>
 
-  <!-- 35: SECTION 07 - INCREMENTAL ADOPTION PLACEHOLDER -->
-  <section class="slide" data-notes="[Incremental adoption strategy - build later] How to introduce HTMX into an existing Drupal project without a rewrite.">
+  <!-- 35: SECTION DIVIDER §7 -->
+  <section class="slide" data-notes="How to actually bring HTMX into a project you already have, without a rewrite.">
     <div class="eyebrow warm">Section 07 &middot; 4 min</div>
     <div class="slide-body">
       <div class="divider-num warm">07</div>
       <h2 class="display lg">Incremental Adoption Strategy</h2>
-      <p class="lede placeholder">Placeholder - how to introduce HTMX into an existing Drupal project without a rewrite.</p>
     </div>
+  </section>
+
+  <!-- 36: FRAME - COEXISTENCE -->
+  <section class="slide" data-notes="You don't rip out the Ajax API to start using HTMX. They coexist on the same page - HTMX doesn't touch anything #ajax owns. Here's how to actually bring it into a project you already have.">
+    <div class="eyebrow warm">No rewrite required</div>
+    <div class="slide-body" style="justify-content:center;">
+      <p class="story-quote">You don't rip out the Ajax API to start using HTMX. They coexist on the same page - HTMX doesn't touch anything <code class="mono">#ajax</code> owns.</p>
+    </div>
+  </section>
+
+  <!-- 37: LIBRARY + ATTACH -->
+  <section class="slide" data-notes="The integration cost is one library definition and one #attached, reusing the exact render-array pattern from §4. That's the whole footprint - no build step, no bundler, no npm required just to get htmx on the page.">
+    <div class="eyebrow warm">Getting htmx onto the page</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code"><span class="tok warm"># my_module.libraries.yml</span>
+my_module.htmx:
+  js:
+    https://unpkg.com/htmx.org@2.0.4:
+      type: external
+      minified: true</pre>
+      </div>
+      <div class="media-box">
+<pre class="code">$build['#attached']['library'][] = <span class="tok warm">'my_module/htmx'</span>;</pre>
+      </div>
+      <p class="caption">One library definition, one <code class="mono">#attached</code> - the same render-array pattern from §4. No build step, no bundler, no npm required.</p>
+    </div>
+  </section>
+
+  <!-- 38: PICK CANDIDATES + HX-BOOST -->
+  <section class="slide" data-notes="The Ajax API code that already works - leave it. HTMX is for new interactive spots, or the small annoying ones: a filter, a load-more pager, an autocomplete list. hx-boost is the zero-risk on-ramp - it turns ordinary links and forms into HTMX requests automatically, no markup changes required elsewhere.">
+    <div class="eyebrow warm">Pick candidates, don&rsquo;t do a sweep</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">Leave it</span><span class="v">Existing Ajax API code that already works. No sweep, no module-wide rewrite.</span></div>
+        <div class="pain-card"><span class="k warm">HTMX candidates</span><span class="v">New interactive spots, or the small annoying ones - a filter, a load-more pager, an autocomplete list.</span></div>
+      </div>
+      <div class="media-box">
+<pre class="code">&lt;body <span class="tok warm">hx-boost="true"</span>&gt;</pre>
+      </div>
+      <p class="caption">The zero-risk on-ramp - ordinary links and forms become HTMX requests automatically, no markup changes required elsewhere.</p>
+    </div>
+  </section>
+
+  <!-- 39: RULE OF THUMB -->
+  <section class="slide" data-notes="New interactive feature: HTMX by default. Existing, working Ajax API code: leave it alone. Multi-step form state - wizards, Form API validation: stays on Ajax API, per §6's verdict.">
+    <div class="eyebrow warm">The rule of thumb</div>
+    <div class="slide-body">
+      <div class="card-grid" style="grid-template-columns:1fr;">
+        <div class="pain-card"><span class="k warm">New interactive feature</span><span class="v">HTMX by default.</span></div>
+        <div class="pain-card"><span class="k">Existing, working Ajax API code</span><span class="v">Leave it alone.</span></div>
+        <div class="pain-card"><span class="k">Multi-step form state</span><span class="v">Wizards, Form API validation - stays on the Ajax API, per &sect;6&rsquo;s verdict.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 40: RECAP / TRANSITION TO §8 -->
+  <section class="slide" data-notes="Add the library, pick a handful of low-risk candidates, boost the rest for free. No rewrite, no migration - just a second tool in the same box as the Ajax API. Next: where this actually stands in Drupal core today, and how you can help move it forward.">
+    <div class="eyebrow warm">The take</div>
+    <div class="slide-body">
+      <h2 class="display lg">A second tool in the same box, not a rewrite.</h2>
+      <p class="lede">Add the library, pick a handful of low-risk candidates, boost the rest for free. No migration weekend required.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: current status + contributing</span>
+    </footer>
+  </section>
+
+  <!-- 41: SECTION DIVIDER §8 -->
+  <section class="slide" data-notes="This isn't a someday story - HTMX landed in Drupal core in 11.3, as part of an active community initiative to replace the Ajax API.">
+    <div class="eyebrow warm">Section 08 &middot; 3 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">08</div>
+      <h2 class="display lg">Current Status + How to Contribute</h2>
+    </div>
+  </section>
+
+  <!-- 42: WHERE THINGS STAND TODAY -->
+  <section class="slide" data-notes="This isn't a someday story - HTMX landed in Drupal core in 11.3, as part of an active community initiative to replace the Ajax API. Both APIs are running side by side right now, on purpose, while contrib gets time to convert.">
+    <div class="eyebrow warm">Where things stand today</div>
+    <div class="slide-body" style="gap:16px;">
+      <p class="lede">This isn&rsquo;t a someday story - HTMX landed in Drupal core in 11.3, as part of an active community initiative to replace the Ajax API.</p>
+      <div class="card-grid">
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v">&ldquo;Replace AJAX API with HTMX&rdquo; - landed in 11.3, still active. Both APIs run side by side until contrib has time to convert.</span></div>
+        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v"><code class="mono">drupal/htmx</code> adds extra tooling on top of core - 1,156 sites already using it.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 43: BOTH APIS AT ONCE, DELIBERATE -->
+  <section class="slide" data-notes="Core is keeping the old Ajax API and the new HTMX path running together on purpose - full deprecation waits until contrib has had real time to convert. That's the same incremental philosophy from §7, just at the core level instead of your project's.">
+    <div class="eyebrow warm">Both APIs, on purpose</div>
+    <div class="slide-body" style="gap:16px;">
+      <p class="lede">Same incremental philosophy as &sect;7 - just scaled up to core. Full deprecation waits until contrib has had real time to convert.</p>
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">Experience Builder</span><span class="v">Page/layout building - not interaction plumbing.</span></div>
+        <div class="pain-card"><span class="k">Single Directory Components</span><span class="v">Component authoring - not interaction plumbing.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 44: HOW TO CONTRIBUTE -->
+  <section class="slide" data-notes="Triage issues, convert a #ajax/Command usage to HTMX and report back, write docs/examples, build real-world case studies like this talk. The core initiative issue queue, the contrib module issue queue, and the #htmx channel on Drupal Slack are where the work happens.">
+    <div class="eyebrow warm">How to contribute</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v">Plan issue + POC issue in the core queue.</span></div>
+        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v">drupal.org/project/htmx issue queue.</span></div>
+        <div class="pain-card"><span class="k warm">Community</span><span class="v"><code class="mono">#htmx</code> on Drupal Slack.</span></div>
+        <div class="pain-card"><span class="k warm">Entry points</span><span class="v">Triage issues, convert one <code class="mono">#ajax</code> callback, write docs, build a case study.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 45: CLOSE / TRANSITION TO §9 -->
+  <section class="slide" data-notes="This isn't waiting on permission - it's already in core, it's actively being worked, and it needs hands. Install the contrib module today, or go convert one #ajax callback in your own project and see what it feels like.">
+    <div class="eyebrow warm">The close</div>
+    <div class="slide-body">
+      <h2 class="display lg">It&rsquo;s not waiting on permission.</h2>
+      <p class="lede">Already in core, actively being worked, and it needs hands. Install the contrib module today, or convert one <code class="mono">#ajax</code> callback and see how it feels.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: wrap-up + Q&amp;A</span>
+    </footer>
   </section>
 
   <button class="navzone left" aria-label="Previous slide" onclick="go(-1)"></button>

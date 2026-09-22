@@ -2,14 +2,14 @@
 
 ## [0:00–1:00] Where things stand today
 
-"HTMX isn't in Drupal core, and there's no accepted core initiative to add it - it lives as contrib today."
+"This isn't a someday story - HTMX landed in Drupal core in 11.3, as part of an active community initiative to replace the Ajax API. Both APIs are running side by side right now, on purpose, while contrib gets time to convert."
 
-- Contrib module: `[contrib module name + drupal.org project link]`, maintained by `[maintainer]`, at `[install count / usage stat]`.
-- Core conversation, if any worth citing: `[core issue number/link]`.
+- Core initiative: "Replace AJAX API with HTMX," landed in 11.3, still active - [drupal.org/project/drupal/issues/3404409](https://www.drupal.org/project/drupal/issues/3404409).
+- Contrib module `drupal/htmx` adds extra tooling on top of what's in core - [drupal.org/project/htmx](https://www.drupal.org/project/htmx), 1,156 sites already using it.
 
-## [1:00–2:00] Why that timing is fine, not a blocker
+## [1:00–2:00] Why "both APIs at once" is deliberate, not messy
 
-"Being contrib rather than core means no core API stability guarantee yet - but also no gatekeeping. It installs on any Drupal 10/11 site today like any other module."
+"Core is keeping the old Ajax API and the new HTMX path running together on purpose - full deprecation waits until contrib has had real time to convert. That's the same incremental philosophy from §7, just at the core level instead of your project's."
 
 Worth distinguishing from adjacent core initiatives that occupy similar "less heavy JS" territory but solve a different problem - page building, not interaction:
 
@@ -18,15 +18,19 @@ Worth distinguishing from adjacent core initiatives that occupy similar "less he
 
 ## [2:00–2:40] How to contribute
 
-- Where the work happens: `[issue queue link]`, `[Slack channel / community space]`.
-- Concrete entry points: triage issues, write tests, contribute docs/examples, build real-world case studies like this talk.
+- Core initiative issue queue: the plan issue above, plus the [POC issue #3446642](https://www.drupal.org/project/drupal/issues/3446642).
+- Contrib module issue queue: [drupal.org/project/htmx/issues](https://www.drupal.org/project/htmx/issues).
+- Community: **#htmx** on Drupal Slack.
+- Concrete entry points: triage issues, convert a `#ajax`/Command usage to HTMX and report back, write docs/examples, build real-world case studies like this talk.
 
 ## [2:40–3:00] Close + transition to §9
 
-"You don't need a core initiative's permission to start. It's a module you can install today."
+"This isn't waiting on permission - it's already in core, it's actively being worked, and it needs hands. Install the contrib module today, or go convert one `#ajax` callback in your own project and see what it feels like."
 
 ## Notes / open items
 
-- Every bracketed placeholder above needs Ruturaj's real, current facts before this section is trustworthy on stage: the actual contrib module name + link, any core issue worth citing, install numbers, and the community channel to point people to.
-- Given only 3 minutes, keep this section to two beats - "where it lives today" + "how to get involved" - rather than a deep initiative history.
-- No slides drafted yet for this section; blocked on the facts above.
+- Corrects the earlier draft's premise: HTMX is not contrib-only. It landed in core as of 11.3 via the "Replace AJAX API with HTMX" initiative - the contrib module now layers extra tooling on top of that core integration rather than being the sole source of it. Verified against drupal.org on 2026-09-22; re-check before the talk in case release/usage numbers move.
+- Deliberately mirrors §7's "incremental, not a rewrite" framing at the core level - both APIs coexisting on purpose is the same philosophy scaled up.
+- Given only 3 minutes, kept to two beats plus a close - "where it lives today" + "how to get involved" - no deep initiative history.
+- No name-dropping of individual contributors (deliberate choice) - keeps the section purely about "here's how you start," not about who's already involved.
+- No slides drafted yet for this section.
