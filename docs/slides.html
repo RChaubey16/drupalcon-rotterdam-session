@@ -371,11 +371,11 @@
     <div class="slide-body" style="justify-content:center;">
       <div class="media-box">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
-    participant B as Browser (core/drupal.ajax)
-    participant S as Drupal (PHP callback)
+    participant B as Browser JS
+    participant S as Drupal PHP
 
     U->>B: Triggers #ajax event (change/click)
     B->>S: XHR request to callback
@@ -422,14 +422,14 @@ public function updateResults(array &amp;$form, FormStateInterface $form_state) 
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace'}}}%%
 flowchart LR
     subgraph PHP["MyForm.php"]
-        A["#ajax wrapper: 'results-wrapper'"]
-        B["ReplaceCommand('#results-wrapper', ...)"]
+        A["`#ajax wrapper:\n'results-wrapper'`"]
+        B["`ReplaceCommand(\n'#results-wrapper', ...)`"]
     end
-    subgraph JS["my_module.js - 3 directories away"]
-        C["id: 'results-wrapper'"]
+    subgraph JS["`my_module.js\n(3 directories away)`"]
+        C["`id:\n'results-wrapper'`"]
     end
-    A -.must match exactly.-> C
-    B -.must match exactly.-> C
+    A -. must match exactly .-> C
+    B -. must match exactly .-> C
     style C fill:#e8637a,stroke:#a13349,color:#12141c
 </pre>
       </div>
@@ -514,10 +514,10 @@ flowchart LR
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
-    participant B as Browser (htmx.js)
+    participant B as Browser htmx.js
     participant S as Server
 
     U->>B: Triggers hx-trigger event (change)
