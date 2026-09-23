@@ -2,50 +2,43 @@
 
 ## [0:00–0:30] Frame
 
-"You don't rip out the Ajax API to start using HTMX. They coexist on the same page — HTMX doesn't touch anything `#ajax` owns. Here's how to actually bring it into a project you already have."
+"You don't rip out the Ajax API to start using HTMX. They coexist on the same page - HTMX doesn't touch anything `#ajax` owns. Here's how to actually bring it into a project you already have."
 
-## [0:30–2:00] Where to start: one library, one target
+## [0:30–2:00] Where to start: it's already in core
 
-"The integration cost is one library definition and one `#attached`, reusing the exact render-array pattern from §4."
-
-```yaml
-# my_module.libraries.yml
-my_module.htmx:
-  js:
-    https://unpkg.com/htmx.org@2.0.4:
-      type: external
-      minified: true
-```
+"On Drupal 11.3 and up there's nothing to install. Core ships htmx as `core/htmx`, plus `core/drupal.htmx` for the Drupal glue: asset loading and behaviors."
 
 ```php
-$build['#attached']['library'][] = 'my_module/htmx';
+// Using the Htmx class? It attaches core/drupal.htmx for you.
+// Hand-writing hx-* attributes in Twig? One line:
+$build['#attached']['library'][] = 'core/drupal.htmx';
 ```
 
-"That's the whole footprint. No build step, no bundler, no npm required just to get htmx on the page — attach it to one render array, on one page, and it stays scoped there."
+"If you use the `Htmx` class from §4, it attaches the library for you. If you hand-write hx attributes in Twig, it's one `#attached` line. No library definition, no CDN, no build step."
 
 ## [2:00–3:00] Pick candidates, don't do a sweep
 
-"The Ajax API code that already works — leave it. HTMX is for new interactive spots, or the small annoying ones: a filter, a 'load more' pager, an autocomplete list. One element at a time, not a module-wide rewrite."
+"The Ajax API code that already works - leave it. HTMX is for new interactive spots, or the small annoying ones: a filter, a 'load more' pager, an autocomplete list. One element at a time, not a module-wide rewrite."
 
 ```html
-<body hx-boost="true">
+<nav hx-boost="true">
 ```
 
-"`hx-boost` is the zero-risk on-ramp — it turns ordinary links and forms into HTMX requests automatically, full-page navigation becomes a partial swap, and nothing else in your markup has to change. It's how you get a feel for HTMX on a real site before you hand-write a single `hx-get`."
+"`hx-boost` is a low-effort way to try it - links and forms inside the boosted element become HTMX requests automatically, and nothing else in your markup has to change. Scope it to one region first: each boosted request still swaps the whole `<body>` by default, so test page-level JS like the toolbar and BigPipe. It's how you get a feel for HTMX on a real site before you hand-write a single `hx-get`."
 
 ## [3:00–3:30] The rule of thumb
 
 - New interactive feature → HTMX by default
 - Existing, working Ajax API code → leave it alone
-- Multi-step form state (wizards, Form API validation) → stays on Ajax API, per §6's verdict
+- Complex multi-step forms (wizards, heavy Form API flows) → keep them on the Ajax API for now, per §6's verdict
 
 ## [3:30–4:00] Recap + transition into §8
 
-"Add the library, pick a handful of low-risk candidates, boost the rest for free. No rewrite, no migration — just a second tool in the same box as the Ajax API. Next: where this actually stands in Drupal core today, and how you can help move it forward."
+"Use what core ships, pick a handful of low-risk candidates, boost one region to get a feel for it. No rewrite, no migration - just a second tool in the same box as the Ajax API. Next: where this actually stands in Drupal core today, and how you can help move it forward."
 
 ## Notes / open items
 
 - Deliberately code+checklist only, no diagram — a practical/actionable change of pace after several diagram-heavy sections (§2–§4).
 - Directly resolves §6's closing tease ("without a rewrite") — this section is that payoff, not a fresh topic.
 - `hx-boost` wasn't introduced in §3's cheat sheet (which stuck to the four core attributes) — first appearance here, deliberately, since it's an adoption tool rather than a core concept.
-- No slides drafted yet for this section.
+- Fact-checked 2026-09-23: replaced the unpkg CDN library (outdated and contradicts §8 - htmx ships in core as `core/htmx` / `core/drupal.htmx`, and `Htmx::applyTo()` attaches it per [api.drupal.org](https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Htmx!Htmx.php/class/Htmx/11.x)). hx-boost softened from "zero-risk" - per [htmx docs](https://htmx.org/attributes/hx-boost/) boosted requests target `<body>` with innerHTML by default.

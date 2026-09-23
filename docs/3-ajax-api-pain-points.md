@@ -2,14 +2,14 @@
 
 ## [0:00–1:30] Evolution
 
-"Drupal's Ajax API isn't new - it's been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony's HttpKernel - `AjaxResponse` extends Symfony's `Response`, and interactions are expressed as a stack of Command objects. It's mature, well-documented, and used everywhere in core - exposed filters, autocomplete, modal dialogs, inline entity forms. This isn't a story about a broken system. It's a story about a system that was the right answer for 2011, and is starting to show its age."
+"Drupal's Ajax API isn't new - it's been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony's HttpKernel - `AjaxResponse` extends Symfony's `JsonResponse`, and interactions are expressed as a stack of Command objects. It's mature, well-documented, and used everywhere in core - exposed filters, autocomplete, modal dialogs, inline entity forms. This isn't a story about a broken system. It's a story about a system that was the right answer for 2011, and is starting to show its age."
 
 ## [1:30–3:30] How it works today
 
 Mechanics:
 - A form/render element gets an `#ajax` property: `callback`, `wrapper`, `event`.
 - The callback runs server-side and returns an `AjaxResponse` built from one or more Commands.
-- The client-side `core/drupal.ajax` library + `Drupal.behaviors` interpret those commands and mutate the DOM.
+- The client-side `core/drupal.ajax` library runs each command to mutate the DOM, then `Drupal.behaviors` re-attach to the new markup.
 
 ```mermaid
 sequenceDiagram
@@ -22,8 +22,8 @@ sequenceDiagram
     S->>S: Build AjaxResponse
     S->>S: addCommand(ReplaceCommand, ...)
     S-->>B: JSON: stack of commands
-    B->>B: Drupal.behaviors interprets commands
-    B->>U: DOM updated (#results-wrapper replaced)
+    B->>B: drupal.ajax runs each command
+    B->>U: DOM updated, behaviors re-attached
 ```
 
 ```php
@@ -53,8 +53,8 @@ flowchart LR
         A["#ajax wrapper: 'results-wrapper'"]
         B["ReplaceCommand('#results-wrapper', ...)"]
     end
-    subgraph JS["my_module.js - 3 directories away"]
-        C["id: 'results-wrapper'"]
+    subgraph TPL["results.html.twig - 3 directories away"]
+        C["div id='results-wrapper'"]
     end
     A -.must match exactly.-> C
     B -.must match exactly.-> C
@@ -64,12 +64,12 @@ flowchart LR
 "One string, defined in two files, in two languages, with no compiler or linter checking they agree. Get it wrong, and nothing throws an error - it just silently doesn't work."
 
 Four pain points (three from the abstract, plus discoverability):
-- **JS coupling**: "Every custom interaction needs a matching pair - a PHP command on the server, a JS behavior on the client, often in different files, sometimes different modules."
+- **JS coupling**: "Every custom interaction needs a matching pair - a PHP command on the server, a matching JS command handler on the client, often in different files, sometimes different modules."
 - **Complexity**: "The command pattern is imperative - you're telling the DOM exactly what to do, command by command, instead of describing what the result should look like."
-- **Maintenance overhead** - personal story: "I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn't in the PHP, and it wasn't in the JS logic - it was a mismatched wrapper ID, one string, defined in a `.js` file three directories away from the PHP that built the response. Nothing threw an error. It just... didn't work." *(This is exactly the bug the diagram above illustrates.)*
+- **Maintenance overhead** - personal story: "I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn't in the PHP, and it wasn't in the JS logic - it was a mismatched wrapper ID, one string, defined in a template three directories away from the PHP that built the response. Nothing threw an error. It just... didn't work." *(This is exactly the bug the diagram above illustrates.)*
 - **Discoverability**: "None of this is visible in the markup. Look at the rendered HTML for that select element, and there's nothing telling you it's interactive - the behavior is buried in a PHP `#ajax` array and a JS file you have to go find. The element doesn't describe itself."
 
-Close - tease the idea, don't name HTMX yet (save the reveal for the opening of §3): "So what if, instead of a PHP command and a matching JS behavior for every interaction, the element itself could just describe what it needs - 'when this changes, fetch this URL, and drop the result here'? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like?"
+Close - tease the idea, don't name HTMX yet (save the reveal for the opening of §3): "So what if, instead of a callback, a command class and a wrapper ID to keep in sync for every interaction, the element itself could just describe what it needs - 'when this changes, fetch this URL, and drop the result here'? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like?"
 
 *(pause, slide transition - §3 opens with the reveal: "That's not a hypothetical. It's called HTMX...")*
 

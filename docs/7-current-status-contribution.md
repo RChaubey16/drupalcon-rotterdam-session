@@ -2,10 +2,11 @@
 
 ## [0:00–1:00] Where things stand today
 
-"This isn't a someday story - HTMX landed in Drupal core in 11.3, as part of an active community initiative to replace the Ajax API. Both APIs are running side by side right now, on purpose, while contrib gets time to convert."
+"This isn't a someday story. HTMX came into core as a dependency in 11.2 and became fully featured in 11.3, as part of an active initiative to gradually replace the Ajax system. Both APIs are running side by side right now, on purpose, while contrib gets time to convert. And the payoff is measurable: drupal.org reports up to 71% less JavaScript loaded for browser-server interactions."
 
-- Core initiative: "Replace AJAX API with HTMX," landed in 11.3, still active - [drupal.org/project/drupal/issues/3404409](https://www.drupal.org/project/drupal/issues/3404409).
+- Core initiative: "[Plan] Gradually replace Drupal's AJAX system with HTMX," still active. HTMX was added as a dependency in 11.2 and is fully featured in 11.3 - [drupal.org/project/drupal/issues/3404409](https://www.drupal.org/project/drupal/issues/3404409).
 - Contrib module `drupal/htmx` adds extra tooling on top of what's in core - [drupal.org/project/htmx](https://www.drupal.org/project/htmx), 1,156 sites already using it.
+- Stat: native HTMX in 11.3 "reduced the loaded JavaScript size by up to 71% for browser-server interactions, including HTML streaming with BigPipe" - [drupal.org announcement](https://www.drupal.org/about/core/blog/native-htmx-in-drupal-1130-rich-ux-with-up-to-71-less-javascript).
 
 ## [1:00–2:00] Why "both APIs at once" is deliberate, not messy
 
@@ -25,7 +26,7 @@ Worth distinguishing from adjacent core initiatives that occupy similar "less he
 
 ## [2:40–3:00] Close + transition to §9
 
-"This isn't waiting on permission - it's already in core, it's actively being worked, and it needs hands. Install the contrib module today, or go convert one `#ajax` callback in your own project and see what it feels like."
+"This isn't waiting on permission - it's already in core, it's actively being worked, and it needs hands. If you're on 11.3, it's already on your site: go convert one `#ajax` callback in your own project and see what it feels like."
 
 ## Notes / open items
 
@@ -34,3 +35,4 @@ Worth distinguishing from adjacent core initiatives that occupy similar "less he
 - Given only 3 minutes, kept to two beats plus a close - "where it lives today" + "how to get involved" - no deep initiative history.
 - No name-dropping of individual contributors (deliberate choice) - keeps the section purely about "here's how you start," not about who's already involved.
 - No slides drafted yet for this section.
+- Re-checked 2026-09-23: initiative title is "[Plan] Gradually replace Drupal's AJAX system with HTMX"; Ajax API not deprecated (both maintained "possibly several major Drupal versions"). drupal/htmx 2.0 requires core ^11.3. Closing line no longer says "install the contrib module", since on 11.3 htmx is already there.
