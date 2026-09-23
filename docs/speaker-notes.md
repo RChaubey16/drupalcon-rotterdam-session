@@ -419,7 +419,7 @@ So, where are we today?
 
 ### Slide 43: Where things stand today
 
-This isn't a someday story. HTMX came into Drupal core as a dependency in 11.2, and became fully featured in 11.3. It's part of an active initiative to gradually replace Drupal's Ajax system with HTMX, and that initiative is still going. Right now both APIs run side by side, on purpose, while contrib gets time to convert.
+This isn't a someday story. HTMX came into Drupal core as a dependency in 11.2, and became fully featured in 11.3. It's part of an official community initiative, called "Replace AJAX API with HTMX", and that initiative is still going. Right now both APIs run side by side, on purpose, while contrib gets time to convert.
 
 And on top of core there's the contrib module, drupal/htmx, which adds extra tooling. It's already used on more than eleven hundred sites.
 
@@ -437,7 +437,9 @@ And quickly, so there's no confusion: this isn't the same thing as Experience Bu
 
 So how can you help?
 
-There's the core initiative, with a plan issue and a proof-of-concept issue in the core queue. There's the contrib module's issue queue, at drupal.org/project/htmx. And there's the #htmx channel on Drupal Slack, where a lot of the conversation happens.
+Start at the initiative page on drupal.org. It's called Replace AJAX API with HTMX, and the link is right here on the slide. From there, the plan issue and its child issues are where the core work happens. There's also the contrib module's issue queue, at drupal.org/project/htmx.
+
+And there's the #htmx channel on Drupal Slack. That's where the people leading this talk almost every day, and there's a coordination meeting every other Thursday. It stays open for 24 hours, so you can join from any time zone.
 
 If you're wondering where to start: triage an issue. Convert one #ajax callback to HTMX and report back how it went. Write docs or examples. Or build a real-world case study, like this talk.
 

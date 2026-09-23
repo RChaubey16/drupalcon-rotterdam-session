@@ -837,12 +837,12 @@ $build['#attached']['library'][] = <span class="tok warm">'core/drupal.htmx'</sp
   </section>
 
   <!-- 43: WHERE THINGS STAND TODAY -->
-  <section class="slide" data-notes="This isn't a someday story. HTMX came into core as a dependency in 11.2 and became fully featured in 11.3, as part of an active initiative to gradually replace the Ajax system. Both APIs are running side by side right now, on purpose, while contrib gets time to convert. And the payoff is measurable: drupal.org reports up to 71% less JavaScript loaded for browser-server interactions.">
+  <section class="slide" data-notes="This isn't a someday story. HTMX came into core as a dependency in 11.2 and became fully featured in 11.3, as part of an active community initiative, Replace AJAX API with HTMX. Both APIs are running side by side right now, on purpose, while contrib gets time to convert. And the payoff is measurable: drupal.org reports up to 71% less JavaScript loaded for browser-server interactions.">
     <div class="eyebrow warm">Where things stand today</div>
     <div class="slide-body" style="gap:16px;">
       <p class="lede">This isn&rsquo;t a someday story - HTMX arrived in core in 11.2 and became fully featured in 11.3, as part of an active initiative to replace the Ajax system.</p>
       <div class="card-grid">
-        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v">&ldquo;Gradually replace Drupal&rsquo;s AJAX system with HTMX&rdquo; - still active. Both APIs run side by side until contrib has time to convert.</span></div>
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v"><a href="https://www.drupal.org/community-initiatives/replace-ajax-api-with-htmx" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">&ldquo;Replace AJAX API with HTMX&rdquo;</a> - an official community initiative, still active. Both APIs run side by side until contrib has time to convert.</span></div>
         <div class="pain-card"><span class="k warm">Contrib module</span><span class="v"><code class="mono">drupal/htmx</code> adds extra tooling on top of core - 1,156 sites already using it.</span></div>
       </div>
       <p class="lede"><strong>Up to 71% less JavaScript</strong> loaded for browser-server interactions with native HTMX, per drupal.org.</p>
@@ -862,13 +862,13 @@ $build['#attached']['library'][] = <span class="tok warm">'core/drupal.htmx'</sp
   </section>
 
   <!-- 45: HOW TO CONTRIBUTE -->
-  <section class="slide" data-notes="Triage issues, convert a #ajax/Command usage to HTMX and report back, write docs/examples, build real-world case studies like this talk. The core initiative issue queue, the contrib module issue queue, and the #htmx channel on Drupal Slack are where the work happens.">
+  <section class="slide" data-notes="Start at the initiative page on drupal.org: Replace AJAX API with HTMX. From there, the plan issue and its child issues are where core work happens. The contrib module has its own issue queue, and the #htmx channel on Drupal Slack is where the lead collaborators talk almost daily, with coordination meetings every other Thursday, left open for 24 hours so every time zone can join. Entry points: triage issues, convert a #ajax/Command usage to HTMX and report back, write docs/examples, build real-world case studies like this talk.">
     <div class="eyebrow warm">How to contribute</div>
     <div class="slide-body">
       <div class="card-grid">
-        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v">Plan issue + POC issue in the core queue.</span></div>
-        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v">drupal.org/project/htmx issue queue.</span></div>
-        <div class="pain-card"><span class="k warm">Community</span><span class="v"><code class="mono">#htmx</code> on Drupal Slack.</span></div>
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v"><a href="https://www.drupal.org/community-initiatives/replace-ajax-api-with-htmx" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">drupal.org/community-initiatives/replace-ajax-api-with-htmx</a> - plus the plan issue <a href="https://www.drupal.org/project/drupal/issues/3404409" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">#3404409</a> and its child issues.</span></div>
+        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v"><a href="https://www.drupal.org/project/htmx/issues" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">drupal.org/project/htmx</a> issue queue.</span></div>
+        <div class="pain-card"><span class="k warm">Community</span><span class="v"><code class="mono">#htmx</code> on Drupal Slack. Coordination meetings every other Thursday, open for 24 hours.</span></div>
         <div class="pain-card"><span class="k warm">Entry points</span><span class="v">Triage issues, convert one <code class="mono">#ajax</code> callback, write docs, build a case study.</span></div>
       </div>
     </div>
