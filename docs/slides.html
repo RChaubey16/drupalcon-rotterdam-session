@@ -1,30 +1,33 @@
 <title>Ajax to HTMX</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
   :root{
-    --bg:#12141c;
-    --surface:#1a1e29;
-    --surface-2:#20263380;
-    --text:#ece9e2;
-    --text-dim:#9aa0b3;
-    --text-faint:#5c6274;
-    --rule:#2b3040;
-    --ajax:#6a93d9;
-    --ajax-dim:#3d4f73;
-    --htmx:#f2994a;
-    --htmx-dim:#6b4a2e;
-    --code-bg:#0c0e15;
-    --danger:#e8637a;
+    /* QED42 re-brand (best-guess palette: crisp white, near-black ink, one vivid accent) */
+    color-scheme:light;
+    --bg:#f2f2ef;
+    --surface:#ffffff;
+    --surface-2:#f7f7f4;
+    --text:#111114;
+    --text-dim:#4a4d55;
+    --text-faint:#80838c;
+    --rule:#e4e4df;
+    --ajax:#3557a6;
+    --ajax-dim:#cfd8ee;
+    --htmx:#d93a1f;
+    --htmx-dim:#f5cdc3;
+    --code-bg:#f7f7f4;
+    --danger:#c62828;
+    --brand:#d93a1f;
   }
 
   *{box-sizing:border-box;}
-  ::selection{background:var(--ajax-dim);color:var(--text);}
+  ::selection{background:var(--htmx-dim);color:var(--text);}
 
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -36,7 +39,7 @@
   h1,h2,h3{margin:0;text-wrap:balance;font-weight:600;}
   p{margin:0;}
   button{font-family:inherit;}
-  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--ajax);outline-offset:3px;}
+  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--brand);outline-offset:3px;}
 
   .deck{
     position:relative;
@@ -48,8 +51,9 @@
     border-radius:10px;
     overflow:hidden;
     container-type:inline-size;
-    box-shadow:0 30px 80px -30px #00000090;
+    box-shadow:0 1px 2px #1111140d, 0 24px 60px -28px #11111433;
   }
+  .deck::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--brand);z-index:4;}
 
   .slide{
     position:absolute;
@@ -84,14 +88,14 @@
   .slide-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,2cqw,18px);}
 
   .display{
-    font-family:'Fraunces',Georgia,'Times New Roman',serif;
-    font-weight:600;
-    line-height:1.05;
-    letter-spacing:-.01em;
+    font-family:'Inter Tight','Inter',-apple-system,sans-serif;
+    font-weight:700;
+    line-height:1.04;
+    letter-spacing:-.028em;
   }
   .display.xl{font-size:clamp(30px,7.6cqw,72px);}
   .display.lg{font-size:clamp(24px,5.6cqw,52px);}
-  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:500;}
+  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:600;letter-spacing:-.02em;}
 
   .sub{font-size:clamp(13px,2cqw,19px);color:var(--text-dim);font-weight:500;}
   .lede{font-size:clamp(14px,2.1cqw,20px);color:var(--text-dim);max-width:64ch;line-height:1.5;}
@@ -108,7 +112,7 @@
   .watermark{
     position:absolute;right:-2cqw;bottom:-6cqw;
     font-family:'JetBrains Mono',monospace;font-weight:700;
-    font-size:38cqw;color:var(--ajax);opacity:.05;
+    font-size:38cqw;color:var(--brand);opacity:.06;
     line-height:1;pointer-events:none;user-select:none;
   }
 
@@ -129,7 +133,7 @@
   }
   .browser-frame .content{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
   .fake-select{
-    font-family:'Manrope',sans-serif;font-size:clamp(10px,1.4cqw,13px);
+    font-family:'Inter',sans-serif;font-size:clamp(10px,1.4cqw,13px);
     color:var(--text);background:var(--bg);border:1px solid var(--rule);
     border-radius:5px;padding:6px 10px;width:fit-content;
   }
@@ -197,7 +201,7 @@
   .pain-card .v{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);line-height:1.4;}
 
   .story-quote{
-    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(16px,2.8cqw,26px);
+    font-family:'Inter Tight','Inter',sans-serif;font-weight:500;letter-spacing:-.015em;font-size:clamp(16px,2.8cqw,26px);
     line-height:1.4;max-width:70ch;
   }
 
@@ -229,13 +233,13 @@
     font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);
   }
   .progress-track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--ajax);width:4.5%;transition:width .3s ease;}
+  .progress-fill{height:100%;background:var(--brand);width:4.5%;transition:width .3s ease;}
   .navbtn{
-    background:none;border:1px solid var(--rule);color:var(--text-dim);
-    border-radius:6px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
+    background:var(--surface);border:1px solid var(--rule);color:var(--text-dim);
+    border-radius:999px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
     font-family:'JetBrains Mono',monospace;font-size:13px;
   }
-  .navbtn:hover{border-color:var(--ajax);color:var(--text);}
+  .navbtn:hover{border-color:var(--text);color:var(--text);}
   .navzone{position:absolute;top:0;bottom:64px;width:14%;background:transparent;border:none;cursor:pointer;}
   .navzone.left{left:0;}
   .navzone.right{right:0;}
@@ -243,7 +247,7 @@
   /* Notes panel */
   .notes-panel{
     position:absolute;left:0;right:0;bottom:0;max-height:0;overflow:hidden;
-    background:#0a0b10ee;border-top:1px solid var(--rule);
+    background:#fffffff5;border-top:1px solid var(--rule);box-shadow:0 -12px 30px -18px #11111433;
     transition:max-height .3s ease;z-index:5;
   }
   .notes-panel.open{max-height:46%;overflow-y:auto;}
@@ -371,13 +375,13 @@
     <div class="slide-body" style="justify-content:center;">
       <div class="media-box">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'darkMode':false,'mainBkg':'#ffffff','actorBkg':'#ffffff','actorTextColor':'#111114','labelBoxBkgColor':'#ffffff','labelTextColor':'#111114','noteBkgColor':'#f7f7f4','noteTextColor':'#111114','activationBkgColor':'#f2f2ef','sequenceNumberColor':'#ffffff','background':'#f7f7f4','primaryColor':'#ffffff','primaryTextColor':'#111114','primaryBorderColor':'#3557a6','actorBorder':'#3557a6','noteBorderColor':'#3557a6','signalColor':'#3557a6','labelBoxBorderColor':'#3557a6','lineColor':'#3557a6','secondaryColor':'#f7f7f4','tertiaryColor':'#f2f2ef','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#111114','signalTextColor':'#111114','actorLineColor':'#80838c'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
     participant B as Browser JS
     participant S as Drupal PHP
 
-    U->>B: Triggers #ajax event (change/click)
+    U->>B: Triggers the element's Ajax event (change/click)
     B->>S: XHR request to callback
     S->>S: Build AjaxResponse
     S->>S: addCommand(ReplaceCommand, ...)
@@ -419,7 +423,7 @@ public function updateResults(array &amp;$form, FormStateInterface $form_state) 
     <div class="slide-body" style="justify-content:center;">
       <div class="media-box">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace'}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'darkMode':false,'mainBkg':'#ffffff','background':'#f7f7f4','primaryColor':'#ffffff','primaryTextColor':'#111114','primaryBorderColor':'#3557a6','lineColor':'#3557a6','secondaryColor':'#f7f7f4','tertiaryColor':'#f2f2ef','clusterBkg':'#f7f7f4','clusterBorder':'#80838c','titleColor':'#111114','edgeLabelBackground':'#f7f7f4','fontFamily':'JetBrains Mono, monospace'}}}%%
 flowchart LR
     subgraph PHP["MyForm.php"]
         A["`#ajax wrapper:\n'results-wrapper'`"]
@@ -430,7 +434,7 @@ flowchart LR
     end
     A -. must match exactly .-> C
     B -. must match exactly .-> C
-    style C fill:#e8637a,stroke:#a13349,color:#12141c
+    style C fill:#f5cdc3,stroke:#c62828,color:#111114
 </pre>
       </div>
     </div>
@@ -514,7 +518,7 @@ flowchart LR
     <div class="slide-body" style="gap:14px;">
       <div class="media-box">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'darkMode':false,'mainBkg':'#ffffff','actorBkg':'#ffffff','actorTextColor':'#111114','labelBoxBkgColor':'#ffffff','labelTextColor':'#111114','noteBkgColor':'#f7f7f4','noteTextColor':'#111114','activationBkgColor':'#f2f2ef','sequenceNumberColor':'#ffffff','background':'#f7f7f4','primaryColor':'#ffffff','primaryTextColor':'#111114','primaryBorderColor':'#d93a1f','actorBorder':'#d93a1f','noteBorderColor':'#d93a1f','signalColor':'#d93a1f','labelBoxBorderColor':'#d93a1f','lineColor':'#d93a1f','secondaryColor':'#f7f7f4','tertiaryColor':'#f2f2ef','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#111114','signalTextColor':'#111114','actorLineColor':'#80838c'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
     participant B as Browser htmx.js
@@ -907,6 +911,8 @@ $build['#attached']['library'][] = <span class="tok warm">'core/drupal.htmx'</sp
 </div>
 
 <script>
+  // Keep the deck (and its diagrams) in the light brand palette regardless of the viewer's OS theme
+  document.documentElement.setAttribute('data-theme','light');
   const slides = Array.from(document.querySelectorAll('.slide'));
   const total = slides.length;
   let idx = 0;

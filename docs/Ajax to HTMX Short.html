@@ -1,30 +1,34 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Ajax to HTMX Short</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
   :root{
-    --bg:#12141c;
-    --surface:#1a1e29;
-    --surface-2:#20263380;
-    --text:#ece9e2;
-    --text-dim:#9aa0b3;
-    --text-faint:#5c6274;
-    --rule:#2b3040;
-    --ajax:#6a93d9;
-    --ajax-dim:#3d4f73;
-    --htmx:#f2994a;
-    --htmx-dim:#6b4a2e;
-    --code-bg:#0c0e15;
-    --danger:#e8637a;
+    /* QED42 re-brand (best-guess palette: crisp white, near-black ink, one vivid accent) */
+    color-scheme:light;
+    --bg:#f2f2ef;
+    --surface:#ffffff;
+    --surface-2:#f7f7f4;
+    --text:#111114;
+    --text-dim:#4a4d55;
+    --text-faint:#80838c;
+    --rule:#e4e4df;
+    --ajax:#3557a6;
+    --ajax-dim:#cfd8ee;
+    --htmx:#d93a1f;
+    --htmx-dim:#f5cdc3;
+    --code-bg:#f7f7f4;
+    --danger:#c62828;
+    --brand:#d93a1f;
   }
 
   *{box-sizing:border-box;}
-  ::selection{background:var(--ajax-dim);color:var(--text);}
+  ::selection{background:var(--htmx-dim);color:var(--text);}
 
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -36,7 +40,7 @@
   h1,h2,h3{margin:0;text-wrap:balance;font-weight:600;}
   p{margin:0;}
   button{font-family:inherit;}
-  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--ajax);outline-offset:3px;}
+  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--brand);outline-offset:3px;}
 
   .deck{
     position:relative;
@@ -47,8 +51,9 @@
     border-radius:10px;
     overflow:hidden;
     container-type:inline-size;
-    box-shadow:0 30px 80px -30px #00000090;
+    box-shadow:0 1px 2px #1111140d, 0 24px 60px -28px #11111433;
   }
+  .deck::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--brand);z-index:4;}
 
   .slide{
     position:absolute;
@@ -83,14 +88,14 @@
   .slide-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,2cqw,18px);}
 
   .display{
-    font-family:'Fraunces',Georgia,'Times New Roman',serif;
-    font-weight:600;
-    line-height:1.05;
-    letter-spacing:-.01em;
+    font-family:'Inter Tight','Inter',-apple-system,sans-serif;
+    font-weight:700;
+    line-height:1.04;
+    letter-spacing:-.028em;
   }
   .display.xl{font-size:clamp(30px,7.6cqw,72px);}
   .display.lg{font-size:clamp(24px,5.6cqw,52px);}
-  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:500;}
+  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:600;letter-spacing:-.02em;}
 
   .sub{font-size:clamp(13px,2cqw,19px);color:var(--text-dim);font-weight:500;}
   .lede{font-size:clamp(14px,2.1cqw,20px);color:var(--text-dim);max-width:64ch;line-height:1.5;}
@@ -99,7 +104,7 @@
   /* Inline code chips: any code token inside running text */
   code.mono{
     font-size:.86em;color:var(--text);
-    background:#ffffff12;border:1px solid #ffffff1f;border-radius:4px;
+    background:#1111140a;border:1px solid #1111141f;border-radius:4px;
     padding:.08em .38em;white-space:nowrap;
   }
   a code.mono{color:inherit;}
@@ -114,7 +119,7 @@
   .watermark{
     position:absolute;right:-2cqw;bottom:-6cqw;
     font-family:'JetBrains Mono',monospace;font-weight:700;
-    font-size:38cqw;color:var(--ajax);opacity:.05;
+    font-size:38cqw;color:var(--brand);opacity:.06;
     line-height:1;pointer-events:none;user-select:none;
   }
 
@@ -135,7 +140,7 @@
   }
   .browser-frame .content{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
   .fake-select{
-    font-family:'Manrope',sans-serif;font-size:clamp(10px,1.4cqw,13px);
+    font-family:'Inter',sans-serif;font-size:clamp(10px,1.4cqw,13px);
     color:var(--text);background:var(--bg);border:1px solid var(--rule);
     border-radius:5px;padding:6px 10px;width:fit-content;
   }
@@ -206,7 +211,7 @@
   .pain-card .v{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);line-height:1.4;}
 
   .story-quote{
-    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(16px,2.8cqw,26px);
+    font-family:'Inter Tight','Inter',sans-serif;font-weight:500;letter-spacing:-.015em;font-size:clamp(16px,2.8cqw,26px);
     line-height:1.4;max-width:70ch;
   }
 
@@ -238,6 +243,7 @@
     font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.05cqw,11px);
     letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);
   }
+  .corner.right{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;color:var(--text);font-size:clamp(11px,1.6cqw,17px);}
   .corner.left{left:3cqw;}
   .corner.right{right:3cqw;bottom:auto;top:2.2cqw;}
 
@@ -267,13 +273,13 @@
     font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);
   }
   .progress-track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--ajax);width:4.5%;transition:width .3s ease;}
+  .progress-fill{height:100%;background:var(--brand);width:4.5%;transition:width .3s ease;}
   .navbtn{
-    background:none;border:1px solid var(--rule);color:var(--text-dim);
-    border-radius:6px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
+    background:var(--surface);border:1px solid var(--rule);color:var(--text-dim);
+    border-radius:999px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
     font-family:'JetBrains Mono',monospace;font-size:13px;
   }
-  .navbtn:hover{border-color:var(--ajax);color:var(--text);}
+  .navbtn:hover{border-color:var(--text);color:var(--text);}
   .navzone{position:absolute;top:0;bottom:64px;width:14%;background:transparent;border:none;cursor:pointer;}
   .navzone.left{left:0;}
   .navzone.right{right:0;}
@@ -281,7 +287,7 @@
   /* Notes panel */
   .notes-panel{
     position:absolute;left:0;right:0;bottom:0;max-height:0;overflow:hidden;
-    background:#0a0b10ee;border-top:1px solid var(--rule);
+    background:#fffffff5;border-top:1px solid var(--rule);box-shadow:0 -12px 30px -18px #11111433;
     transition:max-height .3s ease;z-index:5;
   }
   .notes-panel.open{max-height:46%;overflow-y:auto;}
@@ -410,13 +416,13 @@
     <div class="slide-body" style="justify-content:center;">
       <div class="media-box diagram" style="height:37cqw;padding:1cqw;">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'darkMode':false,'mainBkg':'#ffffff','actorBkg':'#ffffff','actorTextColor':'#111114','labelBoxBkgColor':'#ffffff','labelTextColor':'#111114','noteBkgColor':'#f7f7f4','noteTextColor':'#111114','activationBkgColor':'#f2f2ef','sequenceNumberColor':'#ffffff','background':'#f7f7f4','primaryColor':'#ffffff','primaryTextColor':'#111114','primaryBorderColor':'#3557a6','actorBorder':'#3557a6','noteBorderColor':'#3557a6','signalColor':'#3557a6','labelBoxBorderColor':'#3557a6','lineColor':'#3557a6','secondaryColor':'#f7f7f4','tertiaryColor':'#f2f2ef','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#111114','signalTextColor':'#111114','actorLineColor':'#80838c'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
     participant B as Browser JS
     participant S as Drupal PHP
 
-    U->>B: Triggers #ajax event (change/click)
+    U->>B: Triggers the element's Ajax event (change/click)
     B->>S: XHR request to callback
     S->>S: Build AjaxResponse
     S->>S: addCommand(ReplaceCommand, ...)
@@ -539,7 +545,7 @@ public function updateResults(array &amp;$form, FormStateInterface $form_state) 
     <div class="slide-body" style="gap:14px;">
       <div class="media-box diagram">
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'darkMode':false,'mainBkg':'#ffffff','actorBkg':'#ffffff','actorTextColor':'#111114','labelBoxBkgColor':'#ffffff','labelTextColor':'#111114','noteBkgColor':'#f7f7f4','noteTextColor':'#111114','activationBkgColor':'#f2f2ef','sequenceNumberColor':'#ffffff','background':'#f7f7f4','primaryColor':'#ffffff','primaryTextColor':'#111114','primaryBorderColor':'#d93a1f','actorBorder':'#d93a1f','noteBorderColor':'#d93a1f','signalColor':'#d93a1f','labelBoxBorderColor':'#d93a1f','lineColor':'#d93a1f','secondaryColor':'#f7f7f4','tertiaryColor':'#f2f2ef','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#111114','signalTextColor':'#111114','actorLineColor':'#80838c'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
 sequenceDiagram
     participant U as User
     participant B as Browser htmx.js
@@ -849,6 +855,8 @@ sequenceDiagram
 </div>
 
 <script>
+  // Keep the deck (and its diagrams) in the light brand palette regardless of the viewer's OS theme
+  document.documentElement.setAttribute('data-theme','light');
   const slides = Array.from(document.querySelectorAll('.slide'));
   const total = slides.length;
   let idx = 0;
@@ -898,3 +906,81 @@ sequenceDiagram
   render();
   fitDiagrams();
 </script>
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="/_runtime/mermaid-11.16.1.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+
+</body></html>
