@@ -2,7 +2,9 @@
 
 Full spoken script for **From Ajax API to HTMX: Evolving Drupal Interactions**, slide by slide. Slide numbers match `Ajax to HTMX.pptx`.
 
-**How to read this:** plain text is what you say, word for word if you need to. *[Italic brackets]* are stage cues, not spoken. Each section heading has its time budget. At ~130 words a minute the spoken script runs about 22 minutes on its own, so pauses, clicks, pointing at code and the live demo fill the rest. §4 is still the lightest on words for its slot, so walk through its code slowly.
+**How to read this:** plain text is what you say, word for word if you need to. *[Italic brackets]* are stage cues, not spoken. Each section heading has its time budget. At ~130 words a minute the spoken script runs about 29 minutes on its own, so pauses, clicks, pointing at code and the live demo fill the rest.
+
+*[Analogy]* cues mark short optional analogies. They reuse a few pictures on purpose, so the audience learns each one once: **flat-pack furniture** (Ajax sends instructions, HTMX sends the finished chair) and a **restaurant** (hypermedia, the four attributes, `_htmx_route`). Skip any of them if you're running long. §2 and §8 are already at their time budget with analogies included, so in those two sections drop the GPS analogy (slide 13) and the metro analogy (slide 44) first.
 
 ---
 
@@ -83,6 +85,10 @@ Here's that as a sequence.
 
 The user triggers the event, say a change on a select. The browser sends a request to your callback. On the server, Drupal builds an AjaxResponse and adds commands to it, like a ReplaceCommand. That comes back as JSON: a list of commands, not HTML. The drupal.ajax library runs those commands one by one, and finally the DOM gets updated and behaviors re-attach.
 
+*[Analogy]*
+
+Think of it like flat-pack furniture. You order a chair, and the server doesn't send you a chair. It sends you a box of parts and an instruction sheet: remove this, replace that, attach this here. The browser is the one sitting on the floor, assembling it.
+
 Count the steps: seven. Keep that number in mind. We'll come back to it.
 
 ### Slide 11: The #ajax property
@@ -99,6 +105,10 @@ This diagram is the failure mode.
 
 On the left, MyForm.php declares the wrapper and builds the ReplaceCommand. On the right, a Twig template, three directories away, renders the element with that ID. Both sides have to match exactly.
 
+*[Analogy]*
+
+It's like posting a parcel to flat 12B when the building only has a 12A. The parcel doesn't come back stamped "address not found". It just quietly never arrives. That's a wrapper ID mismatch.
+
 There's no compiler checking that. No linter. Get it wrong and nothing throws an error. It just quietly doesn't work.
 
 ### Slide 13: Four pain points
@@ -108,6 +118,10 @@ So I'd sum up the pain in four points.
 One, JS coupling. The built-in commands are covered, but every custom interaction needs a matching pair: a PHP command on the server and a JS command handler on the client. Often in different files, sometimes in different modules.
 
 Two, complexity. The command pattern is imperative. You're telling the DOM what to do, step by step, instead of describing what the result should look like.
+
+*[Analogy]*
+
+It's the difference between turn-by-turn GPS directions and just giving the taxi driver an address. With commands, you're dictating every single turn. Most of the time, you'd rather just say where you want to end up.
 
 Three, maintenance overhead. One typo, no error, silent failure.
 
@@ -149,6 +163,10 @@ Every a href you've ever written, and every form, is a hypermedia control. It's 
 
 HTMX just extends that vocabulary. Any element can make a request. On any event. With any HTTP verb. And put the result into any part of the page.
 
+*[Analogy]*
+
+Think of a restaurant. A normal link is like asking the waiter for a new drink, and they clear the whole table and reset it from scratch just to bring it. HTMX lets you ask the waiter to swap just the glass, and leave everything else exactly where it is.
+
 ### Slide 18: One element. Four attributes.
 
 Here it is in code. A select element with four attributes.
@@ -175,6 +193,10 @@ There's no separate JSON API here. No client-side templating layer rebuilding HT
 
 So HTMX isn't a new architecture. It closes the gap between the first page load and everything after it, so both work the same way. That's what hypermedia-driven means: the response is the next state of the UI, already rendered.
 
+*[Analogy]*
+
+Back to the flat-pack furniture. The Ajax API sends you the parts and the instruction sheet. HTMX sends you the chair, already assembled. You just put it where it goes.
+
 ### Slide 21: Four attributes
 
 If you remember one slide from this section, make it this one. Four core attributes.
@@ -186,6 +208,10 @@ Trigger: hx-trigger. Any DOM event, not just click or submit.
 Target: hx-target. Any element on the page, not just the one that fired the event.
 
 And swap: hx-swap. How the new HTML goes in: innerHTML, outerHTML, beforeend, afterbegin, and a few more.
+
+*[Analogy]*
+
+If it helps, think of these four as the order slip you hand a waiter. What you're asking for: that's the verb. When to send the order: that's the trigger. Which table it goes to: that's the target. And how to serve it, replace the plate or add to it: that's the swap.
 
 With those four, you can build most of what people use the Ajax API for.
 
@@ -217,6 +243,10 @@ Here's the routing.yml: a path, /filter-results, pointing at a controller method
 
 There's exactly one HTMX-specific line: _htmx_route: TRUE, under options. That tells Drupal to send back just the main content and the assets it needs. Without it, Drupal does what it always does for a page: wraps your content in the full theme, with the header, the regions and the blocks. And you'd end up swapping a whole page into your results div.
 
+*[Analogy]*
+
+Think of ordering one dish at a buffet restaurant. Without the flag, Drupal hands you the entire buffet, the tablecloth and all, when you only asked for a single plate. _htmx_route says: just the plate, please.
+
 If you've written a Drupal route, you've already written an HTMX endpoint. And because it's a real route, you get everything routes give you, including access checks, and a URL you can open directly in your browser to see exactly what it returns.
 
 ### Slide 26: The same render array Drupal always returns
@@ -235,6 +265,10 @@ Core ships an Htmx class that builds every htmx attribute from PHP. Here it is: 
 
 And applyTo() does one more thing. It attaches core/drupal.htmx, which is the glue. When a response comes back, it loads any CSS and JavaScript that response needs, and it re-attaches Drupal.behaviors to the new markup. So your existing Drupal JavaScript keeps working after every swap.
 
+*[Analogy]*
+
+It's like the stage crew in a theatre. When a new piece of scenery gets wheeled on, the crew plugs in its lights and cues the actors, so the scene just works. core/drupal.htmx is that stage crew, for every swap.
+
 That's the part most people would expect to write themselves. Core already did it.
 
 ### Slide 28: Where this pays off: caching
@@ -244,6 +278,10 @@ And third, caching. This is where it really pays off.
 Because the endpoint returns a plain render array, and not a Command stack inside an AjaxResponse, it gets Drupal's caching for free.
 
 Cache tags bubble up automatically, so when content changes, the cached fragment gets invalidated. Cache contexts vary the response correctly. That url.query_args:filter context means Dynamic Page Cache stores a separate copy for each filter value.
+
+*[Analogy]*
+
+Picture a bakery. Cache contexts are like keeping a separate tray for each flavor, so a chocolate order never gets a vanilla cake. Cache tags are the label on each tray saying which ingredients went in, so when an ingredient changes, you know exactly which trays to throw out. Drupal does that bookkeeping for your fragment automatically.
 
 With an AjaxResponse, you're mostly on your own for caching. With HTMX, the endpoint is just a cacheable page fragment, using the caching system you already have.
 
@@ -337,6 +375,10 @@ Debugging. With the Ajax API, the Network tab shows you a stack of commands, not
 
 With HTMX, the Network tab shows the exact HTML that got inserted. What you see is what you got.
 
+*[Analogy]*
+
+Back to the flat-pack furniture: the Ajax API's Network tab shows you the instruction sheet. HTMX's shows you the finished chair.
+
 Progressive enhancement. Honestly, this one is close to a draw. #ajax sits on top of a real form element, the same way hx attributes sit on a real link or form. Both can fall back. But let's be honest: on most real projects, neither one ever gets tested with JavaScript turned off.
 
 ### Slide 34: The verdict, side by side
@@ -371,9 +413,13 @@ Let's talk about incremental adoption.
 
 The good news first. You don't have to rip out the Ajax API to start using HTMX. They live happily on the same page. HTMX doesn't touch anything #ajax owns.
 
+*[Analogy]*
+
+Think of it like renovating a house while you're still living in it. You don't knock the whole thing down. You redo one room at a time, and the rest of the house keeps working.
+
 So here's how to actually bring it into a project you already have.
 
-### Slide 38: One library, one #attached
+### Slide 38: Already in core
 
 The integration cost? On Drupal 11.3 and up, there's nothing to install.
 
@@ -390,6 +436,10 @@ The Ajax API code that already works? Leave it. HTMX is for new interactive spot
 And if you want a low-effort way to try it, there's hx-boost. Put hx-boost="true" on an element, say your nav, and the links and forms inside it become HTMX requests automatically. Nothing else in your markup has to change.
 
 One word of caution: each boosted request still swaps the whole body of the page. So start with one region, and test the page-level JavaScript, things like the toolbar and BigPipe. It's a great way to get a feel for HTMX on a real site before you write a single hx-get.
+
+*[Analogy]*
+
+Treat hx-boost like a test drive around the block, not a road trip across the country.
 
 ### Slide 40: Which tool, when
 
@@ -430,6 +480,10 @@ And the payoff is measurable. According to drupal.org, moving core's own interac
 ### Slide 44: Both APIs, on purpose
 
 Why keep both APIs? Because it's the same incremental idea from a minute ago, just at the level of core instead of your project. Full deprecation of the Ajax API waits until contrib has had real time to convert.
+
+*[Analogy]*
+
+It's like a city opening a new metro line. They don't shut down the buses on day one. Both run side by side until people have had time to switch.
 
 And quickly, so there's no confusion: this isn't the same thing as Experience Builder or Single Directory Components. Experience Builder is about building pages and layouts. SDC is about authoring components. HTMX is about interactions. Different jobs.
 

@@ -53,6 +53,18 @@ Smaller point, but an easy one to answer confidently if it comes up.
 
 **Plain-English one-liner for the audience:** "A search engine can't see what an Ajax API update produces - it's not a URL. An HTMX update usually *is* a URL, so it's naturally visible."
 
+## "What's the quickest way to try HTMX on my site?" (hx-boost)
+
+Moved here from the old §7 "Pick candidates" slide. It was confusing on a slide, but it's a good answer if someone asks for the lowest-effort way to try HTMX.
+
+| | |
+|---|---|
+| **What it is** | Put `hx-boost="true"` on an element (say, your nav). Every link and form inside it becomes an HTMX request automatically, with no other markup changes. |
+| **The catch** | Each boosted request still swaps the whole `<body>`, not a fragment. Page-level JavaScript like the admin toolbar and BigPipe needs testing. |
+| **How to try it safely** | Boost one region, not the whole site. Treat it as a test drive, not the adoption strategy; the three steps (check, pick one spot, convert it) are still the real path. |
+
+**Plain-English one-liner for the audience:** "Add one attribute to your nav and its links start loading without full page reloads. It's a great five-minute experiment, but test your toolbar, and don't mistake it for the migration."
+
 ## Notes / open items
 
 - Add further anticipated questions here as they come up during prep, each as its own `##` subsection.

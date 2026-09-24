@@ -1,0 +1,900 @@
+<title>Ajax to HTMX Short</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#12141c;
+    --surface:#1a1e29;
+    --surface-2:#20263380;
+    --text:#ece9e2;
+    --text-dim:#9aa0b3;
+    --text-faint:#5c6274;
+    --rule:#2b3040;
+    --ajax:#6a93d9;
+    --ajax-dim:#3d4f73;
+    --htmx:#f2994a;
+    --htmx-dim:#6b4a2e;
+    --code-bg:#0c0e15;
+    --danger:#e8637a;
+  }
+
+  *{box-sizing:border-box;}
+  ::selection{background:var(--ajax-dim);color:var(--text);}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    padding:clamp(14px,3vw,32px);
+    gap:14px;
+  }
+
+  h1,h2,h3{margin:0;text-wrap:balance;font-weight:600;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  button:focus-visible, .navzone:focus-visible{outline:2px solid var(--ajax);outline-offset:3px;}
+
+  .deck{
+    position:relative;
+    width:min(100%, 1280px, calc((100vh - 170px) * 16 / 9));
+    aspect-ratio:16/9;
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    overflow:hidden;
+    container-type:inline-size;
+    box-shadow:0 30px 80px -30px #00000090;
+  }
+
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    padding:7cqw 7.5cqw;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(10px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .slide.active{opacity:1;pointer-events:auto;transform:translateY(0);z-index:2;}
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .01s linear;transform:none;}
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(11px,1.5cqw,14px);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ajax);
+    display:flex;
+    align-items:center;
+    gap:.6em;
+    margin-bottom:clamp(14px,2.6cqw,26px);
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--rule);}
+  .eyebrow.warm{color:var(--htmx);}
+
+  .slide-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,2cqw,18px);}
+
+  .display{
+    font-family:'Fraunces',Georgia,'Times New Roman',serif;
+    font-weight:600;
+    line-height:1.05;
+    letter-spacing:-.01em;
+  }
+  .display.xl{font-size:clamp(30px,7.6cqw,72px);}
+  .display.lg{font-size:clamp(24px,5.6cqw,52px);}
+  .display.md{font-size:clamp(19px,3.6cqw,32px);font-weight:500;}
+
+  .sub{font-size:clamp(13px,2cqw,19px);color:var(--text-dim);font-weight:500;}
+  .lede{font-size:clamp(14px,2.1cqw,20px);color:var(--text-dim);max-width:64ch;line-height:1.5;}
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+  /* Inline code chips: any code token inside running text */
+  code.mono{
+    font-size:.86em;color:var(--text);
+    background:#ffffff12;border:1px solid #ffffff1f;border-radius:4px;
+    padding:.08em .38em;white-space:nowrap;
+  }
+  a code.mono{color:inherit;}
+
+  footer.byline{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    font-family:'JetBrains Mono',monospace;font-size:clamp(10px,1.3cqw,13px);
+    color:var(--text-faint);letter-spacing:.04em;
+  }
+
+  /* Title slide watermark */
+  .watermark{
+    position:absolute;right:-2cqw;bottom:-6cqw;
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:38cqw;color:var(--ajax);opacity:.05;
+    line-height:1;pointer-events:none;user-select:none;
+  }
+
+  /* Mock browser frame for demo teaser */
+  .browser-frame{
+    align-self:center;width:min(78cqw,560px);
+    border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+    background:var(--code-bg);
+  }
+  .browser-frame .chrome{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;
+    background:var(--surface);border-bottom:1px solid var(--rule);
+  }
+  .chrome .dot{width:9px;height:9px;border-radius:50%;background:var(--text-faint);}
+  .chrome .url{
+    flex:1;font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.3cqw,12px);
+    color:var(--text-dim);background:var(--bg);border-radius:4px;padding:4px 10px;
+  }
+  .browser-frame .content{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+  .fake-select{
+    font-family:'Manrope',sans-serif;font-size:clamp(10px,1.4cqw,13px);
+    color:var(--text);background:var(--bg);border:1px solid var(--rule);
+    border-radius:5px;padding:6px 10px;width:fit-content;
+  }
+  .fake-row{height:10px;border-radius:3px;background:var(--rule);}
+  .fake-row:nth-child(2){width:88%;}
+  .fake-row:nth-child(3){width:64%;}
+  .frame-caption{
+    text-align:center;font-family:'JetBrains Mono',monospace;
+    font-size:clamp(9px,1.2cqw,11px);color:var(--text-faint);margin-top:10px;
+  }
+
+  /* Reveal lines */
+  .reveal-lines{display:flex;flex-direction:column;gap:.15em;}
+  .reveal-lines .display{color:var(--text-faint);}
+  .reveal-lines .display.hit{color:var(--text);}
+
+  /* Agenda list */
+  .agenda{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(8px,1.6cqw,14px);}
+  .agenda li{
+    display:grid;grid-template-columns:2.6em 1fr;align-items:baseline;
+    gap:.9em;padding-bottom:clamp(8px,1.6cqw,14px);border-bottom:1px solid var(--rule);
+    font-size:clamp(13px,2cqw,18px);
+  }
+  .agenda li:last-child{border-bottom:none;}
+  .agenda .num{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:.85em;}
+
+  /* Section divider */
+  .divider-num{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:clamp(48px,13cqw,140px);color:var(--ajax-dim);line-height:.8;
+  }
+  .divider-num.warm{color:var(--htmx-dim);}
+
+  /* Bullets */
+  .bullets{display:flex;flex-direction:column;gap:clamp(10px,1.8cqw,16px);}
+  .bullets .row{display:flex;gap:.8em;align-items:flex-start;font-size:clamp(13px,2cqw,18px);color:var(--text);}
+  .bullets .row .mk{color:var(--ajax);font-family:'JetBrains Mono',monospace;flex:none;}
+
+  .milestone{display:flex;flex-direction:column;gap:4px;}
+  .milestone .tag{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:clamp(11px,1.5cqw,14px);}
+  .milestone .desc{font-size:clamp(13px,1.9cqw,17px);color:var(--text-dim);}
+
+  /* Diagrams / code */
+  .media-box{
+    background:var(--code-bg);border:1px solid var(--rule);border-radius:8px;
+    padding:clamp(10px,1.8cqw,18px);overflow-x:auto;
+  }
+  .media-box pre.mermaid{margin:0;display:flex;justify-content:center;}
+  /* Diagrams: fixed box inside the 16:9 slide; the rendered SVG scales to fit it (see fitDiagrams) */
+  .media-box.diagram{height:32cqw;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .media-box.diagram svg, .media-box.diagram img{height:100% !important;width:auto !important;max-width:100% !important;max-height:100% !important;}
+  pre.code{
+    margin:0;font-family:'JetBrains Mono',monospace;font-size:clamp(10px,1.6cqw,15px);
+    line-height:1.6;color:var(--text-dim);white-space:pre;
+  }
+  pre.code .tok{color:var(--ajax);font-weight:600;}
+  pre.code .tok.warm{color:var(--htmx);}
+  .caption{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);max-width:62ch;}
+
+  /* Card grid */
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.6cqw,16px);}
+  .pain-card{
+    background:var(--code-bg);border:1px solid var(--rule);border-radius:8px;
+    padding:clamp(12px,1.8cqw,18px);display:flex;flex-direction:column;gap:6px;
+  }
+  .pain-card .k{font-family:'JetBrains Mono',monospace;color:var(--ajax);font-size:clamp(11px,1.6cqw,15px);letter-spacing:.02em;}
+  .pain-card .k.warm{color:var(--htmx);}
+  .pain-card .v{font-size:clamp(12px,1.7cqw,15px);color:var(--text-dim);line-height:1.4;}
+
+  .story-quote{
+    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(16px,2.8cqw,26px);
+    line-height:1.4;max-width:70ch;
+  }
+
+  .placeholder{color:var(--text-faint);border-bottom:1px dashed var(--text-faint);padding-bottom:1px;}
+
+  /* Mapping table */
+  .map-table{width:100%;border-collapse:collapse;}
+  .map-table th{
+    font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em;
+    font-size:clamp(10px,1.3cqw,12px);color:var(--text-faint);text-align:left;
+    padding-bottom:clamp(8px,1.4cqw,12px);border-bottom:1px solid var(--rule);font-weight:600;
+  }
+  .map-table td{
+    padding:clamp(10px,1.8cqw,16px) 0;border-bottom:1px solid var(--rule);
+    font-size:clamp(13px,1.9cqw,17px);color:var(--text);
+  }
+  .map-table tr:last-child td{border-bottom:none;}
+  .map-table td:first-child{color:var(--htmx);padding-right:1.5em;}
+
+  /* Comparison table variant (§6) */
+  .map-table.compare td:first-child{color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:.85em;padding-right:1.2em;}
+  .map-table.compare th.col-ajax{color:var(--ajax);}
+  .map-table.compare th.col-htmx{color:var(--htmx);}
+  .map-table.compare td.wash{color:var(--text-faint);font-style:italic;}
+
+  /* Corner brand marks */
+  .corner{
+    position:absolute;bottom:2.2cqw;z-index:3;pointer-events:none;
+    font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.05cqw,11px);
+    letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);
+  }
+  .corner.left{left:3cqw;}
+  .corner.right{right:3cqw;bottom:auto;top:2.2cqw;}
+
+  /* §7: three-step cards and before/after code */
+  .card-grid.three{grid-template-columns:repeat(3,1fr);}
+  .step-num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(26px,4.2cqw,44px);color:var(--htmx);line-height:1;}
+  .compare-col{display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .col-label{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(10px,1.3cqw,13px);color:var(--ajax);font-weight:600;}
+  .col-label.warm{color:var(--htmx);}
+  pre.code.tight{font-size:clamp(8px,1.12cqw,13px);}
+  .compare-col .media-box{flex:1;}
+  /* Show code exactly as typed: no => / -> ligatures */
+  pre.code, code.mono{font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;}
+  pre.code .cmt{color:var(--text-faint);}
+  h2 code.mono{font-size:.8em;}
+
+  /* Speaker intro slide: two speakers side by side */
+  .speaker-pair{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,4cqw,48px);}
+  .speaker{display:flex;flex-direction:column;gap:clamp(8px,1.4cqw,14px);}
+
+  /* Speaker list (title / thanks) */
+  .speakers{display:flex;flex-direction:column;gap:4px;}
+
+  /* Controls */
+  .controls{
+    width:min(100%, 1280px, calc((100vh - 170px) * 16 / 9));display:flex;align-items:center;gap:14px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);
+  }
+  .progress-track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--ajax);width:4.5%;transition:width .3s ease;}
+  .navbtn{
+    background:none;border:1px solid var(--rule);color:var(--text-dim);
+    border-radius:6px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+  .navbtn:hover{border-color:var(--ajax);color:var(--text);}
+  .navzone{position:absolute;top:0;bottom:64px;width:14%;background:transparent;border:none;cursor:pointer;}
+  .navzone.left{left:0;}
+  .navzone.right{right:0;}
+
+  /* Notes panel */
+  .notes-panel{
+    position:absolute;left:0;right:0;bottom:0;max-height:0;overflow:hidden;
+    background:#0a0b10ee;border-top:1px solid var(--rule);
+    transition:max-height .3s ease;z-index:5;
+  }
+  .notes-panel.open{max-height:46%;overflow-y:auto;}
+  .notes-inner{padding:clamp(12px,2cqw,20px);display:flex;flex-direction:column;gap:8px;}
+  .notes-inner .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--htmx);text-transform:uppercase;}
+  .notes-inner p{font-size:clamp(12px,1.6cqw,15px);color:var(--text-dim);line-height:1.55;max-width:78ch;}
+</style>
+
+<div class="deck" id="deck">
+
+  <!-- 1: TITLE -->
+  <section class="slide active" data-notes="Open cold - screen already up for the live filter demo. No spoken line yet.">
+    <span class="watermark">&lt;/&gt;</span>
+    <div class="eyebrow">DrupalCon Rotterdam &middot; 29 Sep 2026</div>
+    <div class="slide-body">
+      <h1 class="display xl">From Ajax API<br>to HTMX</h1>
+      <p class="sub">Evolving Drupal Interactions</p>
+    </div>
+    <footer class="byline">
+      <span class="speakers">
+        <span>Ruturaj Chaubey - Full Stack Engineer @ QED42</span>
+        <span>Vighnesh Sadagopal - Full Stack Drupal Engineer @ QED42</span>
+      </span>
+      <span>Development, AI &amp; Agentic Architecture</span>
+    </footer>
+  </section>
+
+  <!-- 2: DEMO TEASER -->
+  <section class="slide" data-notes="Silent 15-20s clip: a filter on a Drupal listing page updates instantly as you type. No visible reload, no JS file open anywhere. Let it play, then pause on the result.">
+    <div class="eyebrow">Live &middot; 15 sec</div>
+    <div class="slide-body" style="justify-content:center;">
+      <div class="browser-frame">
+        <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yoursite.example/articles</span></div>
+        <div class="content">
+          <div class="fake-select">Filter by: Recipes ▾</div>
+          <div class="fake-row"></div>
+          <div class="fake-row"></div>
+          <div class="fake-row"></div>
+        </div>
+      </div>
+      <div class="frame-caption">mockup - live demo plays here in the browser</div>
+    </div>
+  </section>
+
+  <!-- 3: REVEAL -->
+  <section class="slide" data-notes="“That&#x27;s a live filter. No JavaScript file. No Ajax command class. Just HTML.”">
+    <div class="eyebrow">What just happened</div>
+    <div class="slide-body reveal-lines">
+      <h2 class="display lg hit">That's a live filter.</h2>
+      <h2 class="display lg">No JavaScript file.</h2>
+      <h2 class="display lg">No Ajax command class.</h2>
+      <h2 class="display lg hit">Just HTML.</h2>
+    </div>
+  </section>
+
+  <!-- 4: SPEAKER INTROS -->
+  <section class="slide" data-notes="Ruturaj: Hi, I&#x27;m Ruturaj - Full Stack Engineer at QED42. Vighnesh: And I&#x27;m Vighnesh - Full Stack Drupal Engineer at QED42.">
+    <div class="eyebrow">Who's talking</div>
+    <div class="slide-body">
+      <div class="speaker-pair">
+        <div class="speaker">
+          <h2 class="display lg">Ruturaj Chaubey</h2>
+          <p class="sub">Full Stack Engineer @ QED42</p>
+        </div>
+        <div class="speaker">
+          <h2 class="display lg">Vighnesh Sadagopal</h2>
+          <p class="sub">Full Stack Drupal Engineer @ QED42</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: FRAMING QUOTE -->
+  <section class="slide" data-notes="Land the quote with room to breathe.">
+    <div class="eyebrow">The premise</div>
+    <div class="slide-body" style="justify-content:center;">
+      <h2 class="display xl">&ldquo;The future of Drupal UX isn't more JS. It's smarter HTML - with HTMX.&rdquo;</h2>
+    </div>
+  </section>
+
+  <!-- 6: AGENDA -->
+  <section class="slide" data-notes="Over the next 35 minutes: why the Ajax API gets painful at scale, HTMX&#x27;s core idea, and how that idea maps directly onto Drupal&#x27;s render, routing and caching system. Then we watch it work live. After that, an honest comparison, how to bring this into a project you already have, and where HTMX stands in Drupal core today, plus how you can help.">
+    <div class="eyebrow">Where we're headed &middot; 35 min</div>
+    <div class="slide-body">
+      <ol class="agenda">
+        <li><span class="num">02</span><span>Why the Ajax API gets painful at scale</span></li>
+        <li><span class="num">03</span><span>HTMX's core idea</span></li>
+        <li><span class="num">04</span><span>Mapping that idea onto Drupal's render, routing &amp; caching</span></li>
+        <li><span class="num">05</span><span>Live: a form, a filter, a partial update - barely any JS</span></li>
+        <li><span class="num">06</span><span>Ajax API vs HTMX, compared honestly</span></li>
+        <li><span class="num">07</span><span>Bringing it into a project you already have</span></li>
+        <li><span class="num">08</span><span>Where HTMX stands in Drupal core today, and how to contribute</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7: SECTION DIVIDER -->
+  <section class="slide" data-notes="Let&#x27;s start with where we are today - the Ajax API.">
+    <div class="eyebrow">Section 02 &middot; 5.5 min</div>
+    <div class="slide-body">
+      <div class="divider-num">02</div>
+      <h2 class="display lg">Ajax API: Evolution &amp; Pain Points</h2>
+    </div>
+  </section>
+
+  <!-- 8: EVOLUTION -->
+  <section class="slide" data-notes="Drupal&#x27;s Ajax API isn&#x27;t new - it&#x27;s been part of core in its current form since Drupal 7, unified under a single framework. In Drupal 8 through 11, it was rebuilt on top of Symfony&#x27;s HttpKernel - AjaxResponse extends Symfony&#x27;s JsonResponse, and interactions are expressed as a stack of Command objects. It&#x27;s mature, well-documented, and used everywhere in core - exposed filters, autocomplete, modal dialogs, inline entity forms. This isn&#x27;t a story about a broken system. It&#x27;s a story about a system that was the right answer for 2011, and is starting to show its age.">
+    <div class="eyebrow">A brief history</div>
+    <div class="slide-body">
+      <div class="milestone">
+        <span class="tag">Drupal 7</span>
+        <span class="desc display md" style="font-weight:400;">Ajax API unified into a single core framework</span>
+      </div>
+      <div class="milestone">
+        <span class="tag">Drupal 8 &rarr; 11</span>
+        <span class="desc display md" style="font-weight:400;">Rebuilt on Symfony's <code class="mono">HttpKernel</code> - <code class="mono">AjaxResponse</code> extends <code class="mono">JsonResponse</code>; interactions become a stack of Commands</span>
+      </div>
+      <p class="lede">Mature. Well-documented. Everywhere in core - exposed filters, autocomplete, modals, inline entity forms.</p>
+      <p class="sub">The right answer for 2011.</p>
+    </div>
+  </section>
+
+  <!-- 9: SEQUENCE DIAGRAM -->
+  <section class="slide" data-notes="Walk through the diagram: user triggers the #ajax event, browser sends an XHR to the callback, server builds an AjaxResponse with commands, drupal.ajax runs each command, the DOM updates and behaviors re-attach.">
+    <div class="eyebrow">The request/response cycle</div>
+    <div class="slide-body" style="justify-content:center;">
+      <div class="media-box diagram" style="height:37cqw;padding:1cqw;">
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#6a93d9','lineColor':'#6a93d9','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+sequenceDiagram
+    participant U as User
+    participant B as Browser JS
+    participant S as Drupal PHP
+
+    U->>B: Triggers #ajax event (change/click)
+    B->>S: XHR request to callback
+    S->>S: Build AjaxResponse
+    S->>S: addCommand(ReplaceCommand, ...)
+    S-->>B: JSON: stack of commands
+    B->>B: drupal.ajax runs each command
+    B->>U: DOM updated, behaviors re-attached
+</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10: CODE SNIPPET -->
+  <section class="slide" data-notes="Two files, two languages, and a wrapper ID string that has to match exactly in both places, or nothing happens - silently.">
+    <div class="eyebrow">In code</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">$form['filter'] = [
+  '#type' =&gt; 'select',
+  <span class="tok">'#ajax'</span> =&gt; [
+    'callback' =&gt; '::updateResults',
+    'wrapper' =&gt; <span class="tok">'results-wrapper'</span>,
+    'event' =&gt; 'change',
+  ],
+];
+
+public function updateResults(array &amp;$form, FormStateInterface $form_state) {
+  $response = new <span class="tok">AjaxResponse</span>();
+  $response-&gt;addCommand(new <span class="tok">ReplaceCommand</span>('#<span class="tok">results-wrapper</span>', $form['results']));
+  return $response;
+}</pre>
+      </div>
+      <p class="caption">Two files. Two languages. One wrapper ID that has to match exactly - or nothing happens. Silently.</p>
+    </div>
+  </section>
+
+  <!-- 11: FOUR PAIN POINTS -->
+  <section class="slide" data-notes="Four pain points: JS coupling, complexity, maintenance overhead, discoverability.">
+    <div class="eyebrow">Four pain points</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">JS coupling</span><span class="v">Custom interactions need a PHP command plus a matching JS command handler.</span></div>
+        <div class="pain-card"><span class="k">Complexity</span><span class="v">An imperative command stack, not a description of the result.</span></div>
+        <div class="pain-card"><span class="k">Maintenance overhead</span><span class="v">One typo, no error, silent failure.</span></div>
+        <div class="pain-card"><span class="k">Discoverability</span><span class="v">The markup never says it's interactive.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12: STORY -->
+  <section class="slide" data-notes="I once spent 40 minutes in devtools debugging an Ajax response that updated one region but silently failed on another. The bug wasn&#x27;t in the PHP, and it wasn&#x27;t in the JS logic - it was a mismatched wrapper ID, one string, defined in a template three directories away from the PHP that built the response. Nothing threw an error. It just... didn&#x27;t work. Same wrapper ID you just saw in the code - that one string is the whole bug.">
+    <div class="eyebrow">A true story</div>
+    <div class="slide-body" style="justify-content:center;">
+      <p class="story-quote">&ldquo;40 minutes in devtools. The bug wasn't PHP. It wasn't JS logic. It was one mismatched wrapper ID - three directories away. Nothing threw an error. It just didn't work.&rdquo;</p>
+    </div>
+  </section>
+
+  <!-- 13: CLOSING TEASE -->
+  <section class="slide" data-notes="So what if, instead of a callback, a command class and a wrapper ID to keep in sync for every interaction, the element itself could just describe what it needs - when this changes, fetch this URL, and drop the result here? No command classes, no wrapper-ID matching, no second file to go find. What would that even look like? (pause, slide transition - next section opens with the reveal: That&#x27;s not a hypothetical. It&#x27;s called HTMX...)">
+    <div class="eyebrow">So what if&hellip;</div>
+    <div class="slide-body">
+      <h2 class="display lg">&hellip;the element itself could just describe what it needs?</h2>
+      <p class="lede">No command classes. No wrapper-ID matching. No second file to go find.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span class="eyebrow warm" style="margin:0;">&rarr; next: HTMX</span>
+    </footer>
+  </section>
+
+  <!-- 14: HTMX REVEAL -->
+  <section class="slide" data-notes="That&#x27;s not a hypothetical. It&#x27;s called HTMX - and it&#x27;s built on an idea that&#x27;s actually older than Ajax: hypermedia.">
+    <div class="eyebrow warm">The reveal</div>
+    <div class="slide-body reveal-lines">
+      <h2 class="display lg">That's not a hypothetical.</h2>
+      <h2 class="display lg hit">It's called HTMX.</h2>
+      <h2 class="display lg hit">Built on an idea older than Ajax: hypermedia.</h2>
+    </div>
+  </section>
+
+  <!-- 15: SECTION DIVIDER §3 -->
+  <section class="slide" data-notes="(Let the section number land.) So what is hypermedia, and why does it matter for Drupal? Let&#x27;s unpack it.">
+    <div class="eyebrow warm">Section 03 &middot; 4 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">03</div>
+      <h2 class="display lg">HTMX &amp; Hypermedia Principles</h2>
+    </div>
+  </section>
+
+  <!-- 16: THE HYPERMEDIA IDEA -->
+  <section class="slide" data-notes="You already know hypermedia. Every &lt;a href&gt; and every &lt;form&gt; you&#x27;ve ever written is a hypermedia control - an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.">
+    <div class="eyebrow warm">The idea</div>
+    <div class="slide-body" style="justify-content:center;">
+      <p class="story-quote">You already know hypermedia. Every <code class="mono">&lt;a href&gt;</code> and every <code class="mono">&lt;form&gt;</code> you've ever written is a hypermedia control - an element that tells the browser what to fetch and where to put the result. HTMX just extends that vocabulary: any element, any event, any HTTP verb, any part of the page as the target.</p>
+    </div>
+  </section>
+
+  <!-- 17: CORE SYNTAX CODE -->
+  <section class="slide" data-notes="One element. Four attributes. The behavior lives right there in the tag - no PHP file to go find, no wrapper ID to keep in sync across two files. The four core attributes: verb (hx-get/post/put/delete), trigger (any DOM event), target (any element), swap (innerHTML, outerHTML, beforeend, afterbegin, and more).">
+    <div class="eyebrow warm">In code</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">&lt;select <span class="tok warm">hx-get</span>="/filter-results"
+        <span class="tok warm">hx-trigger</span>="change"
+        <span class="tok warm">hx-target</span>="#results"
+        <span class="tok warm">hx-swap</span>="innerHTML"&gt;
+  ...
+&lt;/select&gt;
+
+&lt;div id="results"&gt;
+  &lt;!-- server returns just this fragment --&gt;
+&lt;/div&gt;</pre>
+      </div>
+      <p class="caption">One element. Four attributes. The behavior lives right there in the tag - no PHP file to go find, no wrapper ID to keep in sync across two files.</p>
+    </div>
+  </section>
+
+  <!-- 18: HTMX SEQUENCE DIAGRAM -->
+  <section class="slide" data-notes="Compare that to the version you saw ten minutes ago: same three participants - user, browser, server - but four steps instead of seven.">
+    <div class="eyebrow warm">The request/response cycle</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box diagram">
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#1a1e29','primaryTextColor':'#ece9e2','primaryBorderColor':'#f2994a','lineColor':'#f2994a','secondaryColor':'#0c0e15','tertiaryColor':'#12141c','fontFamily':'JetBrains Mono, monospace','actorTextColor':'#ece9e2','signalTextColor':'#ece9e2'}, 'sequence': {'wrap': true, 'wrapPadding': 12, 'messageFontSize': 14, 'actorFontSize': 14, 'noteFontSize': 14}}}%%
+sequenceDiagram
+    participant U as User
+    participant B as Browser htmx.js
+    participant S as Server
+
+    U->>B: Triggers hx-trigger event (change)
+    B->>S: HTTP GET/POST to hx-get/hx-post URL
+    S-->>B: HTML fragment (not JSON, not commands)
+    B->>U: hx-swap drops it into hx-target
+</pre>
+      </div>
+      <p class="caption">Same three participants - user, browser, server. Seven steps in the Ajax version. Four here.</p>
+    </div>
+  </section>
+
+  <!-- 19: THE BIGGER IDEA -->
+  <section class="slide" data-notes="There&#x27;s no separate JSON API here, no client-side templating layer reconstructing HTML from data. The server decides what HTML comes back - same as it always has for the initial page load. HTMX isn&#x27;t a new architecture. It&#x27;s closing the gap between &#x27;first page load&#x27; and &#x27;everything after,&#x27; so both work the same way. That&#x27;s what &#x27;hypermedia-driven&#x27; means - the response is the next state of the UI, already rendered. So HTMX gives Drupal back a vocabulary it never actually lost - hypermedia. Next: how that maps onto Drupal&#x27;s own architecture.">
+    <div class="eyebrow warm">The bigger idea</div>
+    <div class="slide-body">
+      <h2 class="display lg">The response <em>is</em> the next state of the UI - already rendered.</h2>
+      <p class="lede">No separate JSON API. No client-side templating layer. HTMX just closes the gap between the first page load and everything after, so both work the same way.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: mapping to Drupal</span>
+    </footer>
+  </section>
+
+  <!-- 20: SECTION DIVIDER §4 -->
+  <section class="slide" data-notes="HTMX doesn&#x27;t need anything special from Drupal. It needs three things Drupal already has, and has had for over a decade: routes, render arrays, and cache metadata. Let&#x27;s map them one at a time.">
+    <div class="eyebrow warm">Section 04 &middot; 5 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">04</div>
+      <h2 class="display lg">Mapping HTMX onto Drupal's Architecture</h2>
+    </div>
+  </section>
+
+  <!-- 21: ROUTING -->
+  <section class="slide" data-notes="An hx-get URL isn&#x27;t a special Ajax callback - it&#x27;s a normal Drupal route with one flag. _htmx_route: TRUE tells Drupal to return just the main content and its assets. Without it, you&#x27;d get the whole themed page back. No #ajax property, no form-building context required.">
+    <div class="eyebrow warm">Routing</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">my_module.filter_results:
+  path: <span class="tok warm">'/filter-results'</span>
+  defaults:
+    _controller: '\Drupal\my_module\Controller\FilterController::results'
+  requirements:
+    _access: 'TRUE'
+  options:
+    <span class="tok warm">_htmx_route: TRUE</span></pre>
+      </div>
+      <p class="caption"><code class="mono">hx-get="/filter-results"</code> isn't a special Ajax callback. It's a normal Drupal route with one flag: <code class="mono">_htmx_route</code> returns just the main content and its assets, not the whole themed page.</p>
+    </div>
+  </section>
+
+  <!-- 22: RENDER ARRAYS -->
+  <section class="slide" data-notes="The controller returns a render array - the same thing every Drupal controller has always returned. Drupal renders it to HTML. HTMX drops that HTML wherever hx-target points. No AjaxResponse, no Commands - the render pipeline was already built to produce exactly this.">
+    <div class="eyebrow warm">Render arrays</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">public function results(Request $request) {
+  $filter = $request-&gt;query-&gt;get('filter');
+  return [
+    '#theme' =&gt; 'item_list',
+    '#items' =&gt; $this-&gt;getFilteredItems($filter),
+    <span class="tok warm">'#cache'</span> =&gt; [
+      'tags' =&gt; ['node_list'],
+      'contexts' =&gt; ['url.query_args:filter'],
+    ],
+  ];
+}</pre>
+      </div>
+      <p class="caption">The same render array every Drupal controller already returns. No <code class="mono">AjaxResponse</code>. No Commands. The render pipeline already builds exactly this.</p>
+    </div>
+  </section>
+
+  <!-- 23: CORE'S HTMX CLASS -->
+  <section class="slide" data-notes="And on the markup side, since 11.3 you don&#x27;t have to hand-write hx attributes. Core&#x27;s Htmx class builds every htmx attribute from PHP - the same four from the cheat sheet - and applies them to a render element. applyTo() also attaches core/drupal.htmx, which loads any CSS and JS the response needs and re-attaches Drupal.behaviors after every swap.">
+    <div class="eyebrow warm">Core does the glue</div>
+    <div class="slide-body" style="gap:14px;">
+      <div class="media-box">
+<pre class="code">use Drupal\Core\Htmx\Htmx;
+
+(new <span class="tok warm">Htmx</span>())
+  -&gt;get(Url::fromRoute('my_module.filter_results'))
+  -&gt;trigger('change')
+  -&gt;target('#results')
+  -&gt;swap('innerHTML')
+  -&gt;<span class="tok warm">applyTo</span>($form['filter']);</pre>
+      </div>
+      <p class="caption">The same four <code class="mono">hx-*</code> attributes, built in PHP. <code class="mono">applyTo()</code> attaches <code class="mono">core/drupal.htmx</code>, which loads the response&rsquo;s assets and re-attaches <code class="mono">Drupal.behaviors</code> after every swap.</p>
+    </div>
+  </section>
+
+  <!-- 24: CACHING PAYOFF -->
+  <section class="slide" data-notes="Here&#x27;s the part that doesn&#x27;t exist for the Ajax API without extra work: because this is a plain render array, it gets Drupal&#x27;s caching for free. Cache tags bubble up automatically, cache contexts vary the response correctly. An AjaxResponse built from Commands doesn&#x27;t sit in that pipeline the same way - you&#x27;re mostly on your own for caching an Ajax callback response. So: a URL is a route, the HTML is a render array, and caching is #cache tags and contexts - three things Drupal already gives every page. Let&#x27;s see it work.">
+    <div class="eyebrow warm">Where this pays off</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">Ajax API</span><span class="v">An <code class="mono">AjaxResponse</code> built from Commands doesn't sit in the cache pipeline. You're mostly on your own.</span></div>
+        <div class="pain-card"><span class="k warm">HTMX</span><span class="v">A plain render array - cache tags bubble up, contexts vary the response automatically. Caching for free.</span></div>
+      </div>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: live demo</span>
+    </footer>
+  </section>
+
+  <!-- 25: SECTION 05 - LIVE DEMO PLACEHOLDER -->
+  <section class="slide" data-notes="[Budget: 8 min - keep it to one combined flow.] [Live demo - build/walk through here] One combined demo covering the dynamic form, filter, and partial update in a single flow, per the session-flow design note.">
+    <div class="eyebrow warm">Section 05 &middot; 8 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">05</div>
+      <h2 class="display lg">Live Demo</h2>
+      <p class="lede placeholder">Placeholder - dynamic form, filter &amp; partial update, one combined demo built/walked through live in the browser.</p>
+    </div>
+  </section>
+
+  <!-- 26: SECTION DIVIDER §6 -->
+  <section class="slide" data-notes="HTMX doesn&#x27;t win everywhere. Let&#x27;s put the two side by side across five axes, honestly.">
+    <div class="eyebrow">Section 06 &middot; 3 min</div>
+    <div class="slide-body">
+      <div class="divider-num">06</div>
+      <h2 class="display lg">Ajax API vs HTMX, Compared Honestly</h2>
+    </div>
+  </section>
+
+  <!-- 27: VERDICT TABLE -->
+  <section class="slide" data-notes="DX: the Ajax API is more ceremony, but it&#x27;s the most proven path for complex multi-step forms and wizards. HTMX is far less ceremony, and since 11.3 Form API can rebuild forms from HTMX requests - but complex multi-step flows are less proven. Performance: an Ajax response is a JSON command stack that core/drupal.ajax runs command by command. HTMX is a ~16kb library and the response is the HTML itself. Drupal.org reports up to 71% less JavaScript loaded for browser-server interactions with native HTMX in 11.3. Debugging: in the Ajax API, the Network tab shows an opaque command stack, and a wrapper-ID typo fails silently. With HTMX, the Network tab shows the literal HTML that got inserted. Caching: an AjaxResponse sits outside the render cache, so you&#x27;re mostly on your own - HTMX responses are plain render arrays, so cache tags and contexts bubble up automatically, as we saw in the mapping section. Learning curve: the Ajax API is a Drupal-only API; HTMX is standard htmx, documented at htmx.org, so what you learn transfers to any backend. Five axes, side by side. It isn&#x27;t a clean sweep - the Ajax API still has the edge on complex multi-step forms.">
+    <div class="eyebrow">The verdict, side by side</div>
+    <div class="slide-body">
+      <table class="map-table compare">
+        <thead><tr><th></th><th class="col-ajax">Ajax API</th><th class="col-htmx">HTMX</th></tr></thead>
+        <tbody>
+          <tr><td>DX</td><td>More ceremony, most proven for complex multi-step forms</td><td>Less ceremony, multi-step patterns still maturing</td></tr>
+          <tr><td>Performance</td><td>JSON command stack, executed client-side</td><td>Small library, HTML response, up to 71% less JS</td></tr>
+          <tr><td>Debugging</td><td>Opaque command stack, silent failures</td><td>Transparent - see the actual HTML</td></tr>
+          <tr><td>Caching</td><td><code class="mono">AjaxResponse</code> sits outside the render cache - mostly on your own</td><td>Plain render array - cache tags &amp; contexts bubble automatically</td></tr>
+          <tr><td>Learning curve</td><td>Drupal-only API</td><td>Standard htmx - htmx.org docs, a skill that transfers beyond Drupal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 28: RECAP / TRANSITION TO §7 -->
+  <section class="slide" data-notes="Pick HTMX where round trips are simple and the UI is a fragment. Keep the Ajax API where it already works, and for complex multi-step flows until HTMX patterns there mature. This isn&#x27;t a replace-everything story. It&#x27;s a which-tool-for-which-job story. Next: how to actually bring HTMX into a project you already have, without a rewrite.">
+    <div class="eyebrow">The take</div>
+    <div class="slide-body">
+      <h2 class="display lg">Pick the tool for the job, not the trend.</h2>
+      <p class="lede">HTMX where round trips are simple and the UI is a fragment. Ajax API where it already works, and for complex multi-step flows - for now. This isn't a replace-everything story.</p>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: incremental adoption</span>
+    </footer>
+  </section>
+
+  <!-- 29: SECTION DIVIDER §7 -->
+  <section class="slide" data-notes="Let&#x27;s talk about incremental adoption: how to bring HTMX into a project you already have, without a rewrite.">
+    <div class="eyebrow warm">Section 07 &middot; 2 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">07</div>
+      <h2 class="display lg">Incremental Adoption Strategy</h2>
+    </div>
+  </section>
+
+  <!-- 30: ADOPT IN THREE STEPS -->
+  <section class="slide" data-notes="Let&#x27;s make adoption concrete. You don&#x27;t need a migration plan - you need one small spot and an afternoon. Three steps. One, check: on Drupal 11.3 and up, HTMX is already in core. Nothing to install, no library, no build step. Two, pick one spot: something small and self-contained, like a filter, a dependent dropdown or a load-more button. Three, convert it: swap that one #ajax callback for HTMX, and leave everything else alone. HTMX and #ajax run side by side on the same page, so you can stop after any step and nothing breaks. It&#x27;s like renovating a house while you live in it: one room at a time.">
+    <div class="eyebrow warm">No rewrite required</div>
+    <div class="slide-body">
+      <h2 class="display md">Adopt it in three steps</h2>
+      <div class="card-grid three">
+        <div class="pain-card"><span class="step-num">1</span><span class="k warm">Check</span><span class="v">On Drupal 11.3+, HTMX is already in core. Nothing to install.</span></div>
+        <div class="pain-card"><span class="step-num">2</span><span class="k warm">Pick one spot</span><span class="v">Something small: a filter, a dependent dropdown, a load-more.</span></div>
+        <div class="pain-card"><span class="step-num">3</span><span class="k warm">Convert it</span><span class="v">Swap one <code class="mono">#ajax</code> callback for HTMX. Leave everything else alone.</span></div>
+      </div>
+      <p class="lede">HTMX and <code class="mono">#ajax</code> work side by side on the same page, so you can stop after any step.</p>
+    </div>
+  </section>
+
+  <!-- 31: CONVERT ONE CALLBACK - BEFORE / AFTER -->
+  <section class="slide" data-notes="Here&#x27;s step three, using the filter we&#x27;ve followed all talk. On the left, today&#x27;s Ajax API version: an #ajax array with a callback and a wrapper ID, plus a callback method that builds an AjaxResponse with a ReplaceCommand. On the right, the HTMX version: the Htmx class says get this route, on change, and put the result in #results. Behind it, a normal route with _htmx_route, and a controller that returns a render array. That&#x27;s the whole migration for one interaction. No command class, no wrapper ID to keep in sync, and because it&#x27;s a render array, the response is cacheable. Everything on the right, you already saw in the mapping section. And once that works, the rule of thumb: new interactive features, HTMX by default. Existing Ajax code that works, leave it alone. Complex multi-step forms and wizards, keep them on the Ajax API for now. It&#x27;s a second tool in the same box, not a rewrite.">
+    <div class="eyebrow warm">Step 3, in code</div>
+    <div class="slide-body" style="gap:14px;">
+      <h2 class="display md">Convert one <code class="mono">#ajax</code> callback</h2>
+      <div class="card-grid">
+        <div class="compare-col">
+          <span class="col-label">Before &middot; Ajax API</span>
+          <div class="media-box">
+<pre class="code tight">$form['filter']['<span class="tok">#ajax</span>'] = [
+  'callback' =&gt; '::updateResults',
+  'wrapper' =&gt; '<span class="tok">results-wrapper</span>',
+];
+
+<span class="cmt">// + updateResults() builds an</span>
+<span class="cmt">//   </span><span class="tok">AjaxResponse</span><span class="cmt"> + </span><span class="tok">ReplaceCommand</span></pre>
+          </div>
+        </div>
+        <div class="compare-col">
+          <span class="col-label warm">After &middot; HTMX</span>
+          <div class="media-box">
+<pre class="code tight">(new <span class="tok warm">Htmx</span>())
+  -&gt;get(Url::fromRoute('my_module.filter_results'))
+  -&gt;trigger('change')
+  -&gt;target('#results')
+  -&gt;applyTo($form['filter']);
+
+<span class="cmt">// + route with </span><span class="tok warm">_htmx_route: TRUE</span>
+<span class="cmt">//   controller returns a </span><span class="tok warm">render array</span></pre>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Same feature. No command class, no wrapper ID to keep in sync, and the response is cacheable.</p>
+    </div>
+  </section>
+
+  <!-- 32: SECTION DIVIDER §8 -->
+  <section class="slide" data-notes="So, where are we today?">
+    <div class="eyebrow warm">Section 08 &middot; 2 min</div>
+    <div class="slide-body">
+      <div class="divider-num warm">08</div>
+      <h2 class="display lg">Current Status + How to Contribute</h2>
+    </div>
+  </section>
+
+  <!-- 33: WHERE THINGS STAND TODAY -->
+  <section class="slide" data-notes="This isn&#x27;t a someday story. HTMX came into core as a dependency in 11.2 and became fully featured in 11.3, as part of an active community initiative, Replace AJAX API with HTMX. Both APIs are running side by side right now, on purpose, while contrib gets time to convert. And the payoff is measurable: drupal.org reports up to 71% less JavaScript loaded for browser-server interactions.">
+    <div class="eyebrow warm">Where things stand today</div>
+    <div class="slide-body" style="gap:16px;">
+      <p class="lede">This isn&rsquo;t a someday story - HTMX arrived in core in 11.2 and became fully featured in 11.3, as part of an active initiative to replace the Ajax system.</p>
+      <div class="card-grid">
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v"><a href="https://www.drupal.org/community-initiatives/replace-ajax-api-with-htmx" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">&ldquo;Replace AJAX API with HTMX&rdquo;</a> - an official community initiative, still active. Both APIs run side by side until contrib has time to convert.</span></div>
+        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v"><code class="mono">drupal/htmx</code> adds extra tooling on top of core - 1,156 sites already using it.</span></div>
+      </div>
+      <p class="lede"><strong>Up to 71% less JavaScript</strong> loaded for browser-server interactions with native HTMX, per drupal.org.</p>
+    </div>
+  </section>
+
+  <!-- 34: HOW TO CONTRIBUTE -->
+  <section class="slide" data-notes="Start at the initiative page on drupal.org: Replace AJAX API with HTMX. From there, the plan issue and its child issues are where core work happens. The contrib module has its own issue queue, and the #htmx channel on Drupal Slack is where the lead collaborators talk almost daily, with coordination meetings every other Thursday, left open for 24 hours so every time zone can join. Entry points: triage issues, convert a #ajax/Command usage to HTMX and report back, write docs/examples, build real-world case studies like this talk. And this isn&#x27;t waiting on permission - if you&#x27;re on 11.3, it&#x27;s already on your site. Go convert one #ajax callback and see how it feels.">
+    <div class="eyebrow warm">How to contribute</div>
+    <div class="slide-body">
+      <div class="card-grid">
+        <div class="pain-card"><span class="k warm">Core initiative</span><span class="v"><a href="https://www.drupal.org/community-initiatives/replace-ajax-api-with-htmx" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">drupal.org/community-initiatives/replace-ajax-api-with-htmx</a> - plus the plan issue <a href="https://www.drupal.org/project/drupal/issues/3404409" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">#3404409</a> and its child issues.</span></div>
+        <div class="pain-card"><span class="k warm">Contrib module</span><span class="v"><a href="https://www.drupal.org/project/htmx/issues" target="_blank" rel="noopener" style="color:var(--htmx);overflow-wrap:anywhere;">drupal.org/project/htmx</a> issue queue.</span></div>
+        <div class="pain-card"><span class="k warm">Community</span><span class="v"><code class="mono">#htmx</code> on Drupal Slack. Coordination meetings every other Thursday, open for 24 hours.</span></div>
+        <div class="pain-card"><span class="k warm">Entry points</span><span class="v">Triage issues, convert one <code class="mono">#ajax</code> callback, write docs, build a case study.</span></div>
+      </div>
+    </div>
+    <footer class="byline">
+      <span></span>
+      <span>&rarr; next: wrap-up + Q&amp;A</span>
+    </footer>
+  </section>
+
+  <!-- 35: WRAP-UP §9 -->
+  <section class="slide" data-notes="Four things to take home. The problem: the Ajax API makes you keep a callback, a command stack and a wrapper ID in sync, and when they drift it fails silently. The idea: HTMX puts the behavior right in the markup, and the server just returns HTML. The fit: HTMX only needs routes, render arrays and cache metadata - Drupal has had all three for over a decade, and since 11.3 core ships an Htmx class to glue them together. The path: build new interactive features with HTMX, leave working Ajax code alone, and go convert one callback to see how it feels. That&#x27;s it from us.">
+    <div class="eyebrow warm">Wrap-up</div>
+    <div class="slide-body">
+      <h2 class="display md">Four things to take home</h2>
+      <div class="card-grid">
+        <div class="pain-card"><span class="k">The problem</span><span class="v">Ajax API: callback, command stack and wrapper ID kept in sync, failing silently.</span></div>
+        <div class="pain-card"><span class="k warm">The idea</span><span class="v">HTMX puts the behavior in the markup. The server just returns HTML.</span></div>
+        <div class="pain-card"><span class="k warm">The fit</span><span class="v">Routes, render arrays, cache metadata: Drupal already has all three.</span></div>
+        <div class="pain-card"><span class="k warm">The path</span><span class="v">New features in HTMX. Leave working Ajax alone. Convert one callback.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 36: THANK YOU -->
+  <section class="slide" data-notes="Thank everyone for coming, then open the floor for questions. Backup answers for likely questions are in docs/8-qa-backup.md.">
+    <span class="watermark">&lt;/&gt;</span>
+    <div class="eyebrow warm">Q&amp;A</div>
+    <div class="slide-body">
+      <h2 class="display xl">Thank you!</h2>
+      <h2 class="display lg" style="color:var(--htmx);">Questions?</h2>
+    </div>
+    <footer class="byline">
+      <span class="speakers">
+        <span>Ruturaj Chaubey - Full Stack Engineer @ QED42</span>
+        <span>Vighnesh Sadagopal - Full Stack Drupal Engineer @ QED42</span>
+      </span>
+    </footer>
+  </section>
+
+  <span class="corner left">DrupalCon Rotterdam 2026</span>
+  <span class="corner right">QED42</span>
+
+  <button class="navzone left" aria-label="Previous slide" onclick="go(-1)"></button>
+  <button class="navzone right" aria-label="Next slide" onclick="go(1)"></button>
+
+  <div class="notes-panel" id="notesPanel">
+    <div class="notes-inner">
+      <span class="lbl">Speaker notes</span>
+      <p id="notesText"></p>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="navbtn" onclick="go(-1)">&larr; Prev</button>
+  <span class="mono" id="counter">1 / 35</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="navbtn" id="notesBtn" onclick="toggleNotes()">Notes (N)</button>
+  <button class="navbtn" onclick="go(1)">Next &rarr;</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0;
+  let notesOpen = false;
+
+  function render(){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    document.getElementById('counter').textContent = (idx+1) + ' / ' + total;
+    document.getElementById('progressFill').style.width = (((idx+1)/total)*100) + '%';
+    document.getElementById('notesText').textContent = slides[idx].dataset.notes || '';
+  }
+
+  function go(delta){
+    idx = Math.min(total-1, Math.max(0, idx+delta));
+    render();
+  }
+
+  function toggleNotes(){
+    notesOpen = !notesOpen;
+    document.getElementById('notesPanel').classList.toggle('open', notesOpen);
+  }
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight' || e.key===' ') { go(1); e.preventDefault(); }
+    else if(e.key==='ArrowLeft') { go(-1); e.preventDefault(); }
+    else if(e.key.toLowerCase()==='n') { toggleNotes(); }
+    else if(e.key==='Home') { idx=0; render(); }
+    else if(e.key==='End') { idx=total-1; render(); }
+  });
+
+  // The artifact renders mermaid itself and may wrap the SVG; stretch every wrapper so the SVG fits its box.
+  function fitDiagrams(){
+    document.querySelectorAll('.media-box.diagram').forEach(box=>{
+      const g = box.querySelector('svg, img');
+      if(!g) return;
+      for(let el=g.parentElement; el && el!==box; el=el.parentElement){
+        el.style.height='100%'; el.style.maxWidth='100%'; el.style.margin='0';
+        el.style.display='flex'; el.style.justifyContent='center'; el.style.alignItems='center';
+      }
+      g.style.setProperty('height','100%','important');
+      g.style.setProperty('width','auto','important');
+      g.style.setProperty('max-width','100%','important');
+    });
+  }
+  new MutationObserver(fitDiagrams).observe(document.getElementById('deck'), {childList:true, subtree:true});
+
+  render();
+  fitDiagrams();
+</script>
